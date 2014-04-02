@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load cms_tags sekizai_tags %}
+{% load menu_tags %}
+{% block extra_class %}home twocol{% endblock %}
+{% block content %}
+	<div class="content_body">
+		<section class="row intro">
+			<article class="page_intro">
+				{% placeholder "Intro" %}
+			</article>
+			<section class="rotator page_features">
+				<div class="strip">
+					{% placeholder "rotator" %}
+				</div>
+			</section>
+		</section>
+		<section class="row latest">
+			<section class="latest_section latest_news">
+				{% with teaser_type="newsitem" %}{% placeholder "newsitems" %}{% endwith %}
+			</section>
+			<section class="latest_section featured_researchers">
+				{% with teaser_type="researchers" %}{% placeholder "researchers" %}{% endwith %}
+			</section>
+		</section>
+	</div>
+{% endblock content %}

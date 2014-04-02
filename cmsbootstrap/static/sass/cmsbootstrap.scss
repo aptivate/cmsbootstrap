@@ -1,0 +1,11 @@
+.dropdown:hover > .dropdown-menu {
+	display: inherit;
+}
+
+.footer_right .plugin_link:after {
+	content: " | ";
+}
+
+.footer_site {
+	padding: 15px;
+}

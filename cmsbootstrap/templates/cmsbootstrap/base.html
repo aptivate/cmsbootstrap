@@ -1,0 +1,209 @@
+{% load i18n %}
+{% load cms_tags sekizai_tags %}
+{% load menu_tags %}
+{% load url from future %}
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE|default:"en" }}">
+		<head>
+			<title>CMSBootstrap - {% block title %}{% page_attribute "page_title" %}{% endblock %}</title>
+			<meta charset="utf-8" />
+			<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+			<link rel="stylesheet" href="{{ STATIC_URL }}css/bootstrap.css" />
+			<link rel="stylesheet" href="{{ STATIC_URL }}css/cmsbootstrap.css" />
+			<!--[if lte IE 8]>
+				<script src="{{ STATIC_URL }}js/html5.js" type="text/javascript"></script>
+				<link rel="stylesheet" href="{{ STATIC_URL }}css/ie.css" />
+			<![endif]-->
+			<!--[if lte IE 7]>
+				<script src="{{ STATIC_URL }}js/lte-ie7.js" type="text/javascript"></script>
+				<link rel="stylesheet" href="{{ STATIC_URL }}css/ie7.css" />
+			<![endif]-->
+			{% render_block "css" %}
+			{% block "extra_css" %}{% endblock %}
+			{% render_block "js" %}
+			{% block "extra_js_header" %}{% endblock %}
+			{% if form %}{{ form.media }}{% endif %}
+		</head>
+		<body class="{{ request.current_page.get_root.get_slug }} page {{ LANGUAGE_CODE }} {% block "extra_class" %}{% endblock %}">
+			{% cms_toolbar %}
+
+			<header class="header_site">
+				<nav class="user_access">
+					<a href="#maincontent" class="hide">{% trans "Skip to content" %}</a>
+
+					<div class="personaltools">
+                        {% block personaltools %}{% endblock %}
+						{% comment %}
+						<div class="user_login">
+							{% if user.is_authenticated %}
+								{% if user.is_staff %}
+									<a class="user_login_link" href="/admin/">{% trans "Admin" %}</a>
+								{% endif %}
+								{% if RUNNING_TESTS %}
+									<a class="user_login_link" href="/fake/mentoring_dashboard">{% trans "Dashboard" %}</a>
+								{% else %}
+									<a class="user_login_link" href="{% url "mentoring_dashboard" %}">{% trans "Dashboard" %}</a>
+								{% endif %}
+
+								<a class="user_login_link" href="{% url "auth_logout" %}">{% trans "Sign Out" %}</a>
+							{% else %}
+								<a class="user_login_link" href="{% url "auth_login" %}">{% trans "Sign In" %}</a>
+							{% endif %}
+						</div>
+						<span class="personal_bar_heading">- {% trans "New to AuthorAID?" %}
+							<a href="/about/what-is-authoraid">{% trans "find out more" %}</a>
+							{% if not user.is_authenticated %}
+							{% trans "or" %}
+							<a href="{% url "registration_register" %}">{% trans "join now" %}</a>
+							{% endif %}
+						</span>
+						{% endcomment %}
+					</div>
+				</nav>
+
+                {% block search-box %}{% endblock %}
+				{% comment %}
+				<form class="navbar-search" action="{% page_url "search" %}">
+					<input type="text" name="q" id="id_q" value="{{ request.GET.q }}" class="search-query" placeholder="{% trans "Search" %}" />
+					<input type="submit" class="btn" value="{% trans "Search" %}" />
+				</form>
+				{% endcomment %}
+
+				<nav class="navbar navbar-default" role="navigation">
+				  <div class="container-fluid">
+					<div class="navbar-header">
+                        {% block navbar-header %}
+						<a class="navbar-brand" href="{% page_url 'home' %}">CMSBootstrap</a>
+                        {% endblock %}
+					</div> 
+					<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+						<ul class="nav navbar-nav">
+                            {% block navbar-nav %}
+							<li class="home">
+								<a href="{% page_url 'home' %}"><span class="icon-home" aria-hidden="true"></span>{% trans "Home" %}</a>
+							</li>
+							{% show_menu 0 0 %}
+							<li class="dropdown">
+								<a class="dropdown-toggle" id="language-menu" data-toggle="dropdown">
+									{% trans "Language" %}
+									<span class="caret"></span>
+								</a>
+								<ul class="dropdown-menu nav-pills" role="menu" aria-labelledby="language-menu">
+									{% load menu_tags %}
+									{% language_chooser "cmsbootstrap/menu/language_chooser.html" %}
+								</ul>
+							</li>
+                            {% endblock %}
+						</ul>
+					</div>
+				</nav>
+			</header>
+
+			<div class="content_site">
+				<a id="maincontent"></a>
+
+				{% block breadcrumb %}
+				<div class="breadcrumb_wrap">
+					<ul class="breadcrumb">
+					{% if custom_breadcrumb %}
+						{% for breadcrumb in custom_breadcrumb %}
+						<li>{% if not forloop.last %}<a href="{{ breadcrumb.url }}">{% endif %}{{ breadcrumb.title }}{% if not forloop.last %}</a><span class="divider">/</span>{% endif %}</li>
+						{% endfor %}
+					{% else %}
+						{% show_breadcrumb 0 "cmsbootstrap/menu/breadcrumb.html" %}
+					{% endif %}
+					</ul>
+				</div><!-- .breadcrumb_wrap -->
+				{% endblock breadcrumb %}
+
+				<!--Body content-->
+				{% block content %}
+				{% endblock %}
+			</div><!-- .content_site -->
+
+			<footer class="footer_site navbar navbar-default">
+				<section class="footer_left navbar-left">
+					{% show_placeholder "footer_left" "placeholders_extra" %}
+				</section>
+				<section class="footer_right navbar-right">
+					{% show_placeholder "footer_right" "placeholders_extra" %}
+					{% trans "Site by" %} <a href="http://www.aptivate.org">Aptivate</a>
+				</section>
+			</footer>
+
+{% block extra_js_footer %}
+{% comment %}
+			<script type="text/javascript"><!--
+			
+		function loadScript(url, callback) {
+			function callbackAndLoad() {
+				callback();
+		
+				// Handle memory leak in IE
+				script.onload = script.onreadystatechange = null;
+				if ( head && script.parentNode ) {
+					head.removeChild( script );
+				}
+			}
+
+	var head = document.getElementsByTagName("head")[0],
+		script = document.createElement("script");
+	script.type = "text/javascript";
+
+	if (callback) {
+		if (typeof script.onreadystatechange === "object") { // IE
+			script.onreadystatechange = function () {
+				if (script.readyState === "loaded") {
+					callbackAndLoad();
+				}
+			};
+		} else { // onload (rest of the lot)
+			script.onload = callbackAndLoad;
+		}
+	}
+	script.src = '{{ STATIC_URL }}' + url;
+	head.appendChild(script);
+}
+
+if(typeof $ == "undefined") {  // $ != jQuery
+	loadScript('js/jquip.base.min.js',
+        function() {
+            loadScript('js/jquip.events.min.js',
+                function () {
+                    loadScript('js/functions.js');
+                });
+        });
+} else {
+	loadScript('js/functions.js');
+}
+// --></script>
+{% endcomment %}
+
+{% comment %}
+			{% if user.is_authenticated %}
+			<script src="{{ STATIC_URL }}js/cms-toolbar-fix.js" type="text/javascript"></script>
+			{% endif %}
+{% endcomment %}
+{% comment %}
+		<script type="text/javascript"><!--
+		var _gaq = _gaq || [];
+		_gaq.push(['_setAccount', '{{ ANALYTICS_ACCOUNT_NUMBER }}']);
+		_gaq.push(['_trackPageview']);
+
+		(function() {
+			var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+			ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+			var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+		})();
+
+		function trackPublicDownload(href){
+			_gaq.push(['_trackPageview', href]);
+			_gaq.push(function(){
+				window.open(href);
+			});
+		}
+		//--></script>
+{% endcomment %}
+{% endblock extra_js_footer %}
+	</body>
+</html>

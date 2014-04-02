@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load cms_tags sekizai_tags %}
+{% load menu_tags %}
+{% block extra_class %}threecol{% endblock %}
+{% block content %}
+	{% block sidebar %}
+    <nav class="content_submenu">
+		{% with root=request.current_page.get_root %}
+		<ul class="nav nav-tabs nav-stacked">
+			{% show_menu_below_id root.reverse_id 0 100 100 100 %}
+		</ul>
+		{% endwith %}
+	</nav>
+    {% endblock sidebar %}
+
+    <article class="content_body">
+		<!--Django messages-->
+		{% if messages %}
+		{% for message in messages %}
+			<div class="alert{% if message.tags %} alert-{{ message.tags }}{% endif %}">
+			{{ message|safe }}
+		</div>
+		{% endfor %}
+		{% endif %}
+        {% block main_section_title %}{% endblock %}
+        <!-- Main content start -->
+		{% block main %}
+			{% placeholder "main" %}
+		{% endblock main %}
+		<!-- Main content end -->
+    </article>
+
+    <section class="content_sidebar">
+    	{% block content_sidebar %}
+	    	{% placeholder "default_sidebar" or %}
+		    	{% show_placeholder "default_sidebar" "placeholders_extra" %}
+			{% endplaceholder %}
+    	{% endblock content_sidebar %}
+    </section>
+{% endblock content %}

@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load cms_tags sekizai_tags %}
+{% load menu_tags %}
+{% load url from future %}
+{% block content %}
+    {% placeholder "footer_left" %}
+    {% placeholder "footer_right" %}
+    {% placeholder "publications_sidebar" %}
+    {% placeholder "training_sidebar" %}
+    {% placeholder "network_sidebar" %}
+    {% placeholder "country_sidebar" %}
+    {% placeholder "default_sidebar" %}
+{% endblock %}
