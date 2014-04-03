@@ -60,7 +60,7 @@
 							{% endif %}
 						</span>
 						{% endcomment %}
-					</div>
+					</div><!-- class="personaltools" -->
 				</nav>
 
                 {% block search-box %}{% endblock %}
@@ -72,32 +72,33 @@
 				{% endcomment %}
 
 				<nav class="navbar navbar-default" role="navigation">
-				  <div class="container-fluid">
-					<div class="navbar-header">
-                        {% block navbar-header %}
-						<a class="navbar-brand" href="{% page_url 'home' %}">CMSBootstrap</a>
-                        {% endblock %}
-					</div> 
-					<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-						<ul class="nav navbar-nav">
-                            {% block navbar-nav %}
-							<li class="home">
-								<a href="{% page_url 'home' %}"><span class="icon-home" aria-hidden="true"></span>{% trans "Home" %}</a>
-							</li>
-							{% show_menu 0 0 %}
-							<li class="dropdown">
-								<a class="dropdown-toggle" id="language-menu" data-toggle="dropdown">
-									{% trans "Language" %}
-									<span class="caret"></span>
-								</a>
-								<ul class="dropdown-menu nav-pills" role="menu" aria-labelledby="language-menu">
-									{% load menu_tags %}
-									{% language_chooser "cmsbootstrap/menu/language_chooser.html" %}
-								</ul>
-							</li>
-                            {% endblock %}
-						</ul>
-					</div>
+					<div class="container-fluid">
+						<div class="navbar-header">
+							{% block navbar-header %}
+							<a class="navbar-brand" href="{% page_url 'home' %}">CMSBootstrap</a>
+							{% endblock %}
+						</div> 
+						<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+							<ul class="nav navbar-nav">
+								{% block navbar-nav %}
+								<li class="home">
+									<a href="{% page_url 'home' %}"><span class="icon-home" aria-hidden="true"></span>{% trans "Home" %}</a>
+								</li>
+								{% show_menu 0 0 %}
+								<li class="dropdown">
+									<a class="dropdown-toggle" id="language-menu" data-toggle="dropdown">
+										{% trans "Language" %}
+										<span class="caret"></span>
+									</a>
+									<ul class="dropdown-menu nav-pills" role="menu" aria-labelledby="language-menu">
+										{% load menu_tags %}
+										{% language_chooser "cmsbootstrap/menu/language_chooser.html" %}
+									</ul>
+								</li>
+								{% endblock %}
+							</ul>
+						</div><!-- class="collapse navbar-collapse" -->
+				  </div><!-- class="container-fluid" -->
 				</nav>
 			</header>
 
