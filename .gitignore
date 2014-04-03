@@ -18,3 +18,4 @@ reports/*
 *.sql
 *.sql.gz
 .sass-cache
+cmsbootstrap.egg-info
