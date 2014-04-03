@@ -8,8 +8,10 @@
 			<title>CMSBootstrap - {% block title %}{% page_attribute "page_title" %}{% endblock %}</title>
 			<meta charset="utf-8" />
 			<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+			{% block standard_css %}
 			<link rel="stylesheet" href="{{ STATIC_URL }}css/bootstrap.css" />
 			<link rel="stylesheet" href="{{ STATIC_URL }}css/cmsbootstrap.css" />
+			{% endblock standard_css %}
 			<!--[if lte IE 8]>
 				<script src="{{ STATIC_URL }}js/html5.js" type="text/javascript"></script>
 				<script src="{{ STATIC_URL }}js/respond.min.js" type="text/javascript"></script>
