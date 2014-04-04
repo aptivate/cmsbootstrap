@@ -73,20 +73,22 @@
 				</form>
 				{% endcomment %}
 
-				<ul class="nav nav-pills" role="navigation">
+				<ul class="top-navigation nav nav-pills" role="navigation">
 					{% block navbar-nav %}
 					{% show_menu 0 0 0 0 "cmsbootstrap/menu/menu.html" %}
+					{% block language-menu %}
 					<li class="dropdown">
 						<a class="dropdown-toggle" id="language-menu" data-toggle="dropdown">
 							{% trans "Language" %}
 							<span class="caret"></span>
 						</a>
-						<ul class="dropdown-menu nav-pills" role="menu" aria-labelledby="language-menu">
+						<ul class="dropdown-menu language-menu nav-pills" role="menu" aria-labelledby="language-menu">
 							{% load menu_tags %}
 							{% language_chooser "cmsbootstrap/menu/language_chooser.html" %}
 						</ul>
 					</li>
-					{% endblock %}
+					{% endblock language-menu %}
+					{% endblock navbar-nav %}
 				</ul>
 			</header>
 

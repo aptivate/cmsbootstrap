@@ -2,6 +2,6 @@
 {% get_available_languages as languages %}
 {% for language in languages %}
     {% language language.0 %}
-        <li role="presentation"><a role="menuitem" tabindex="-1" href="{% page_language_url language.0 %}"{% ifequal current_language language.0 %} class="active"{% endifequal %}>{{ language.1 }}</a></li>
+        <li role="presentation" {% ifequal current_language language.0 %} class="active"{% endifequal %}><a role="menuitem" tabindex="-1" href="{% page_language_url language.0 %}">{{ language.1 }}</a></li>
     {% endlanguage %}
 {% endfor %}
