@@ -4,10 +4,17 @@
 {% load url from future %}
 <!DOCTYPE html>
 <html lang="{{ LANGUAGE_CODE|default:"en" }}">
-		<head>
+	<head>
+		{% block html-title %}
 			<title>CMSBootstrap - {% block title %}{% page_attribute "page_title" %}{% endblock %}</title>
-			<meta charset="utf-8" />
+		{% endblock html-title %}
+
+		<meta charset="utf-8" />
+
+		{% block viewport %}
 			<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+		{% endblock %}
+
 			{% block standard_css %}
 			<link rel="stylesheet" href="{{ STATIC_URL }}css/bootstrap.css" />
 			<link rel="stylesheet" href="{{ STATIC_URL }}css/cmsbootstrap.css" />

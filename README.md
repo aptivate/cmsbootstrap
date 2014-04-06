@@ -285,9 +285,9 @@ the following contents, overriding the one in
 
     {% load cms_tags sekizai_tags i18n %}
 
-    {% block htmltitle %}
+    {% block html-title %}
     <title>My Project! - {% block title %}{% page_attribute "page_title" %}{% endblock %}</title>
-    {% endblock htmltitle %}
+    {% endblock html-title %}
 
 Note: the `htmltitle` block was copied from the one in
 `cmsbootstrap/templates/cmsbootstrap/base.html` and slightly modified. It
