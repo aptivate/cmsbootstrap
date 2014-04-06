@@ -115,40 +115,38 @@ You can manually compile the Sass files to standard CSS if you really want to.
 The Github project contains the following files and directories:
 
 * cmsbootstrap: the app which you can add to `INSTALLED_APPS` in Django.
-* cmsbootstrap/models.py: an empty models file to keep Django happy.
-* cmsbootstrap/static: static resources: Sass/SCSS, CSS and JavaScript.
-* cmsbootstrap/static/bootstrap-sass-3.1.1.tar.gz: the complete sources for
-  the supplied version of Bootstrap (in Sass/SCSS format).
-* cmsbootstrap/static/css/cmsbootstrap/ie7.css: Internet Explorer 7
-  compatibility CSS library (minimal, just for the included styles).
-* cmsbootstrap/static/css/cmsbootstrap/ie8.css: Internet Explorer 8
-  compatibility CSS library (minimal, just for the included styles).
-* cmsbootstrap/static/js/bootstrap.js, 
-  cmsbootstrap/static/js/bootstrap: the JavaScript libraries supplied with
-  Bootstrap.
-* cmsbootstrap/static/js/html5shiv.js, cmsbootstrap/static/js/lte-ie7.js,
-  cmsbootstrap/static/js/respond.min.js: compatibility libraries for
-  Internet Explorer 8 (responsive media queries and HTML5 elements).
-* cmsbootstrap/static/sass/bootstrap: Bootstrap Sass/SCSS source files.
-  cmsbootstrap/static/sass/cmsbootstrap.scss: a few additional styles in
-  Sass/SCSS format.
-* cmsbootstrap/templates: the supplied templates.
-* cmsbootstrap/templates/base.html: the root base template, intended to
-  be overridden by you.
-* cmsbootstrap/templates/cmsbootstrap: the example templates, not
-  intended to be overridden but extended or ignored and replaced.
-* cmsbootstrap/templates/cmsbootstrap/menu/breadcrumb.html:
-  render Django-CMS breadcrumbs using Bootstrap styles.
-* cmsbootstrap/templates/cmsbootstrap/menu/language_chooser.html:
-  render Django-CMS language chooser using Bootstrap styles.
-* cmsbootstrap/templates/cmsbootstrap/menu/menu.html:
-  render Django-CMS menus using Bootstrap styles.
-* cmsbootstrap/templates/cmsbootstrap/placeholders_extra.html:
-  template with placeholders for extra bits of text that can be inserted
-  into other pages.
-* cmsbootstrap/tests: test cases for cmsbootstrap, may be affected by
-  your own application choices (e.g. changing URLs, languages or pages.)
-* cmsbootstrap/views.py: no views are currently provided.
+  * models.py: an empty models file to keep Django happy.
+  * static: static resources: Sass/SCSS, CSS and JavaScript.
+    * bootstrap-sass-3.1.1.tar.gz: the complete sources for
+      the supplied version of Bootstrap (in Sass/SCSS format).
+    * css/cmsbootstrap/ie7.css: Internet Explorer 7
+      compatibility CSS library (minimal, just for the included styles).
+    * css/cmsbootstrap/ie8.css: Internet Explorer 8
+      compatibility CSS library (minimal, just for the included styles).
+    * js/bootstrap.js, js/bootstrap: the JavaScript libraries supplied with
+      Bootstrap.
+    * js/html5shiv.js, js/lte-ie7.js, js/respond.min.js: compatibility
+      libraries for Internet Explorer 8 (responsive media queries and HTML5
+      elements).
+    * sass/bootstrap: Bootstrap Sass/SCSS source files.
+    * sass/cmsbootstrap.scss: a few additional styles in Sass/SCSS format.
+  * templates: the supplied templates.
+    * base.html: the root base template, intended to
+      be overridden by you.
+    * cmsbootstrap: the example templates, not
+      intended to be overridden but extended or ignored and replaced.
+    * cmsbootstrap/menu/breadcrumb.html:
+      render Django-CMS breadcrumbs using Bootstrap styles.
+    * cmsbootstrap/menu/language_chooser.html:
+      render Django-CMS language chooser using Bootstrap styles.
+    * cmsbootstrap/menu/menu.html:
+      render Django-CMS menus using Bootstrap styles.
+    * cmsbootstrap/placeholders_extra.html:
+      template with placeholders for extra bits of text that can be inserted
+      into other pages.
+  * tests: test cases for cmsbootstrap, may be affected by
+    your own application choices (e.g. changing URLs, languages or pages.)
+  * views.py: no views are currently provided.
 
 ## Usage
 
