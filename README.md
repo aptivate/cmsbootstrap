@@ -370,3 +370,84 @@ And change the CSS classes of the `<ul class="top-navigation">` element as well:
 	{% block top-navigation-classes%}
 	top-navigation nav navbar-nav
 	{% endblock %}
+
+### Adding CSS styles
+
+You can add a static CSS file to the base template easily:
+
+	{% block css %}
+		{{ block.super }}
+		<link rel="stylesheet" href="{{ STATIC_URL }}css/additional-static.css" />
+	{% endblock %}
+
+### Adding SCSS styles
+
+You can add new Sass/SCSS assets by following the
+[django-assets documentation](http://elsdoerfer.name/docs/django-assets/),
+creating an `assets.py` file. For example, you could create a `main/assets.py`
+like this:
+
+	from django_assets import Bundle, register
+
+	main_css = Bundle(
+	    'sass/main/main.scss',
+	    filters='pyscss, cssmin',
+	    output='css/main/main.css')
+
+	register('main_css', main_css)
+
+And create `main/static/sass/main/main.scss` with whatever additional
+Sass/SCSS you'd like to include, for example:
+
+	@import "bootstrap/bootstrap";
+
+	.nav-text {
+	    padding: $nav-link-padding;
+	}
+
+Because you've imported the `bootstrap.scss` from `cmsbootstrap`, which in turn
+imports `variables.scss`, you have access to all the variables defined by it,
+such as `$nav-link-padding` used above.
+
+Then you need to include the generated CSS file in your `base.html`:
+
+	{% block css %}
+		{{ block.super }}
+		<link rel="stylesheet" href="{{ STATIC_URL }}css/main/main.css" />
+	{% endblock %}
+
+### Changing Bootstrap variables and values
+
+If you want to make changes to these variables, without copying all of the
+`cmsbootstrap` Sass files into your own app, you can add the `cmsbootstrap`
+project directory to `PYSCSS_LOAD_PATHS` in `settings.py`:
+	
+	PYSCSS_LOAD_PATHS = (
+	    path.join(path.dirname(__file__), '.ve', 'src', 'cmsbootstrap',
+		'cmsbootstrap', 'static', 'sass', 'bootstrap'),
+	)
+
+Then you can copy `bootstrap.scss` and `_variables.scss` into your own project,
+for example `main/static/sass/bootstrap`:
+
+	mkdir main/static/sass/bootstrap
+	cp .ve/src/cmsbootstrap/cmsbootstrap/static/sass/bootstrap/bootstrap.scss main/static/sass/bootstrap
+	cp .ve/src/cmsbootstrap/cmsbootstrap/static/sass/bootstrap/_variables.scss main/static/sass/bootstrap
+
+In this case, all of the files imported by `bootstrap.scss` are found in the
+`cmsbootstrap` project using the search path, except for the ones that you
+copied into `main/static/sass/bootstrap` which are used in preference. So you
+can modify the variable values defined in `variables.scss`, and enable or
+disable modules in `bootstrap.scss` (most are commented out by default to
+reduce bandwidth overhead).
+
+In order to actually compile this, you must have created an `assets.py` in the
+`main` app as described above. And you need to replace the `standard-css` block
+inherited from `cmsbootstrap/base.html` with your own, including your file
+instead of `bootstrap.scss`:
+
+	{% block standard-css %}
+		{# note that the inherited block.super is NOT included #}
+		<link rel="stylesheet" href="{{ STATIC_URL }}css/cmsbootstrap.css" />
+		<link rel="stylesheet" href="{{ STATIC_URL }}css/main/main.css" />
+	{% endblock %}
