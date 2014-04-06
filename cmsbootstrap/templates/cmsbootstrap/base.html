@@ -73,7 +73,8 @@
 				</form>
 				{% endcomment %}
 
-				<ul class="top-navigation nav nav-pills" role="navigation">
+				{% block top-navigation %}
+				<ul class="{% block top-navigation-classes%}top-navigation nav nav-pills{% endblock %}" role="navigation">
 					{% block navbar-nav %}
 					{% show_menu 0 0 0 0 "cmsbootstrap/menu/menu.html" %}
 					{% block language-menu %}
@@ -90,6 +91,7 @@
 					{% endblock language-menu %}
 					{% endblock navbar-nav %}
 				</ul>
+				{% endblock %}
 			</header>
 
 			<div class="content_site">
