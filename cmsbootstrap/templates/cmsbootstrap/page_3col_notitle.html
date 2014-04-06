@@ -2,9 +2,11 @@
 {% load i18n %}
 {% load cms_tags sekizai_tags %}
 {% load menu_tags %}
+
 {% block extra_class %}threecol{% endblock %}
+
 {% block content %}
-	{% block sidebar %}
+	{% block sidebar-left %}
     <nav class="content_submenu">
 		{% with root=request.current_page.get_root %}
 		<ul class="nav nav-tabs nav-stacked">
@@ -12,7 +14,7 @@
 		</ul>
 		{% endwith %}
 	</nav>
-    {% endblock sidebar %}
+    {% endblock sidebar-left %}
 
     <article class="content_body">
 		<!--Django messages-->
@@ -31,11 +33,11 @@
 		<!-- Main content end -->
     </article>
 
+    {% block sidebar-right %}
     <section class="content_sidebar">
-    	{% block content_sidebar %}
-	    	{% placeholder "default_sidebar" or %}
-		    	{% show_placeholder "default_sidebar" "placeholders_extra" %}
-			{% endplaceholder %}
-    	{% endblock content_sidebar %}
+        {% placeholder "default_sidebar" or %}
+            {% show_placeholder "default_sidebar" "placeholders_extra" %}
+        {% endplaceholder %}
     </section>
+    {% endblock sidebar-right %}
 {% endblock content %}
