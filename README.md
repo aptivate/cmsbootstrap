@@ -327,4 +327,48 @@ And override blocks defined in your base template (`main/templates/base.html`)
 and/or the `cmsbootstrap` base template from which it inherits
 (`cmsbootstrap/templates/cmsbootstrap/base.html`).
 
+## Customisation examples
 
+### Change the site credits
+
+For some strange reason, you might want your pages to end with "Site by Cool
+Dude" instead of "Site by Aptivate". You can do that by overriding the `credits`
+block of the base template, placing the following code in your `base.html`:
+
+	{% block credits %}
+	{% trans "Site by" %} <a href="http://www.example.com">Cool Dude</a>
+	{% endblock %}
+
+### Change the top menu to a Bootstrap [Navbar](http://getbootstrap.com/components/#navbar).
+
+You'll need to wrap the `top-navigation` block in some additional markup:
+
+	{% load i18n %}
+
+	{% block top-navigation %}
+	<nav class="navbar navbar-default" role="navigation">
+		<div class="container-fluid">
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="#">Cool Dude</a>
+			</div>
+
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				{{ block.super }}
+			</div>
+		</div>
+	</nav>
+	{% endblock %}
+
+And change the CSS classes of the `<ul class="top-navigation">` element as well:
+
+	{% block top-navigation-classes%}
+	top-navigation nav navbar-nav
+	{% endblock %}
