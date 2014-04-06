@@ -1,0 +1,39 @@
+import private_settings
+
+DEBUG = True
+TEMPLATE_DEBUG = DEBUG
+
+# used in admin template so we know which site we're looking at
+DEPLOY_ENV = "staging"
+DEPLOY_ENV_NAME = "Staging Server"
+DEPLOY_ENV_COLOR = '#33ccff'  # bright blue
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',  # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
+        'NAME': 'test_project',                      # Or path to database file if using sqlite3.
+        'USER': 'test_project',                      # Not used with sqlite3.
+        'PASSWORD': private_settings.DB_PASSWORD,                  # Not used with sqlite3.
+        'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
+        'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
+        'OPTIONS': {
+            "init_command": "SET storage_engine=INNODB",
+        }
+    }
+}
+
+########## HAYSTACK SEARCH CONFIGURATION
+HAYSTACK_CONNECTIONS = {
+    'default': {
+        'ENGINE': 'haystack.backends.elasticsearch_backend.ElasticsearchSearchEngine',
+        'URL': 'http://fen-vz-elasticsearch.fen.aptivate.org:9200/',
+        'INDEX_NAME': 'test_project_%s' % DEPLOY_ENV,
+    },
+}
+#
+
+EMAIL_HOST = 'localhost'
+
+EMAIL_BACKEND = 'djcelery_email.backends.CeleryEmailBackend'
+
+# vi: ft=python

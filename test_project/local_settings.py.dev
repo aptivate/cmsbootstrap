@@ -1,0 +1,53 @@
+import private_settings
+import sys
+
+DEBUG = True
+TEMPLATE_DEBUG = DEBUG
+
+# used in admin template so we know which site we're looking at
+DEPLOY_ENV = "localdev"
+DEPLOY_ENV_NAME = "Local dev copy"
+DEPLOY_ENV_COLOR = '#ff9900'  # orange
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',  # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
+        'NAME': 'test_project.sqlite',                      # Or path to database file if using sqlite3.
+        'USER': 'test_project',                      # Not used with sqlite3.
+        'PASSWORD': private_settings.DB_PASSWORD,                  # Not used with sqlite3.
+        'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
+        'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
+    }
+}
+
+EMAIL_HOST = 'localhost'
+
+# turn off caching
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
+    }
+}
+
+#EXTRA_INSTALLED_APPS = ('debug_toolbar',)
+#EXTRA_MIDDLEWARE_CLASSES = ('debug_toolbar.middleware.DebugToolbarMiddleware',)
+INTERNAL_IPS = ('127.0.0.1',)
+
+DEBUG_TOOLBAR_CONFIG = {
+    'INTERCEPT_REDIRECTS': False
+}
+
+# test stuff
+if 'test' in sys.argv:
+    SOUTH_TESTS_MIGRATE = False
+
+    PASSWORD_HASHERS = (
+        'django.contrib.auth.hashers.MD5PasswordHasher',
+    )
+
+
+CELERY_EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND = 'djcelery_email.backends.CeleryEmailBackend'
+#EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+# vi: ft=python

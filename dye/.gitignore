@@ -1,6 +1,5 @@
 *.pyc
 .*.swp
-.*.swo
 *~
 .ropeproject
 django/website/local_settings.py
@@ -17,7 +16,3 @@ reports/*
 .pydevproject
 *.sql
 *.sql.gz
-.sass-cache
-cmsbootstrap.egg-info
-*.egg
-*.sqlite

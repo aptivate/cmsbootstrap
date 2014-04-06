@@ -1,0 +1,4 @@
+# https://projects.aptivate.org/issues/672
+User-agent: *
+Disallow: /admin/
+Disallow: /en/admin/

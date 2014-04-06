@@ -144,14 +144,17 @@ Of course you need [Django](https://www.djangoproject.com/)
 environment as well. They'll be installed automatically by Pip if you don't
 have them already.
 
-### Starting your site
+### Add to `INSTALLED_APPS`
 
-If you don't have one already, you'll need a superuser to log into the
-Django-CMS admin. You can create one like this:
+Add `cmsbootstrap` to your INSTALLED_APPS setting like this::
 
-    django/website/manage.py createsuperuser
+    INSTALLED_APPS = (
+        ...
+        'cmsbootstrap',
+    )
 
-And run the development server...
+This allows Django to find the templates and static files that we've provided.
+It also allows `django-assets` to find the assets and compile them.
 
 ### Building the assets
 
@@ -165,9 +168,30 @@ for changes and rebuild them automatically when necessary:
 
     django/website/manage.py assets watch
 
+### Starting your site
+
+You need some Django-CMS pages to see the templates. If you don't have any,
+then you'll just see the Django-CMS pony when you visit your site at
+http://localhost:8000/.
+
+Creating pages is not really in the scope of this documentation. But if you
+just want to get started quickly, you can 
+
+If you don't have one already, you'll need a superuser to log into the
+Django-CMS admin. You can create one like this:
+
+    django/website/manage.py createsuperuser
+
+And run the development server (in a spare terminal):
+
+    django/website/manage.py runserver
+
+You should be able to access http://localhost:8000/ and see the Django-CMS pony.
+
+### Check that the site loads
 
 
-
+###
 
 
 
