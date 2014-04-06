@@ -152,7 +152,7 @@
         "site": 1, 
         "creation_date": "2014-04-04T20:46:30.118Z", 
         "lft": 1, 
-        "in_navigation": false, 
+        "in_navigation": true, 
         "reverse_id": null, 
         "login_required": false, 
         "created_by": "chris", 
@@ -185,7 +185,7 @@
         "site": 1, 
         "creation_date": "2014-04-04T20:46:59.013Z", 
         "lft": 1, 
-        "in_navigation": false, 
+        "in_navigation": true, 
         "reverse_id": null, 
         "login_required": false, 
         "created_by": "chris", 
@@ -283,6 +283,17 @@
         "changed_by": "chris", 
         "publisher_is_draft": false, 
         "published": true
+    }
+},
+{
+    "pk": 2, 
+    "model": "cms.pagemoderatorstate", 
+    "fields": {
+        "action": "ADD", 
+        "message": "", 
+        "created": "2014-04-06T15:15:12Z", 
+        "page": 3, 
+        "user": null
     }
 },
 {
