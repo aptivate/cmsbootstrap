@@ -1,0 +1,9 @@
+/* http://www.stefanwienert.net/blog/2012/05/18/easy-css-vendor-prefix-mixin-for-sass/ */
+
+@mixin vendor-prefix($name, $argument) {
+  -webkit-#{$name}: #{$argument};
+  -ms-#{$name}: #{$argument};
+  -moz-#{$name}: #{$argument};
+  -o-#{$name}: #{$argument};
+  #{$name}: #{$argument};
+}
