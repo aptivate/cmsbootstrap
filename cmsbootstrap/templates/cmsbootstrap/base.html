@@ -2,6 +2,8 @@
 {% load cms_tags sekizai_tags %}
 {% load menu_tags %}
 {% load url from future %}
+{% load assets %}
+
 <!DOCTYPE html>
 <html lang="{{ LANGUAGE_CODE|default:"en" }}">
 	<head>
@@ -17,8 +19,9 @@
 
 		{% block css %}
 			{% block standard-css %}
-				<link rel="stylesheet" href="{{ STATIC_URL }}css/bootstrap.css" />
-				<link rel="stylesheet" href="{{ STATIC_URL }}css/cmsbootstrap.css" />
+                {% assets "bootstrap_css", "cmsbootstrap_css" %}
+                    <link rel="stylesheet" href="{{ ASSET_URL }}" />
+                {% endassets %}
 			{% endblock standard-css %}
 
 			<!--[if lte IE 8]>
