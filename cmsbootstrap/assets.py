@@ -15,3 +15,11 @@ cmsbootstrap_css = Bundle(
     depends='sass/*.scss')
 
 register('cmsbootstrap_css', cmsbootstrap_css)
+
+cmsbootstrap_js = Bundle(
+    'js/cmsbootstrap/script_loader.js',
+	filters='jsmin',
+	output='js/cmsbootstrap.js'
+    )
+
+register('cmsbootstrap_js', cmsbootstrap_js)
