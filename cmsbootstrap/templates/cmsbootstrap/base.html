@@ -30,9 +30,12 @@
 			{% endblock standard-css %}
 
 			<!--[if lte IE 8]>
-				<script src="{{ STATIC_URL }}js/html5.js" type="text/javascript"></script>
-				<script src="{{ STATIC_URL }}js/respond.min.js" type="text/javascript"></script>
-				<link rel="stylesheet" href="{{ STATIC_URL }}css/cmsbootstrap/ie8.css" />
+				{% assets "cmsbootstrap.ie8_js" %}
+					<script type="text/javascript" src="{{ ASSET_URL }}"></script>
+				{% endassets %}
+				{% assets "cmsbootstrap.ie8_css" %}
+					<link rel="stylesheet" href="{{ ASSET_URL }}" />
+				{% endassets %}
 			<![endif]-->
 			<!--[if lte IE 7]>
 				<script src="{{ STATIC_URL }}js/lte-ie7.js" type="text/javascript"></script>
@@ -164,9 +167,9 @@
 		{% render_block "js" %}
 
 		{% block js_footer %}
-            {% assets "cmsbootstrap_js" %}
-                <script type="text/javascript" src="{{ ASSET_URL }}"></script>
-            {% endassets %}
+			{% assets "cmsbootstrap.common_js" %}
+				<script type="text/javascript" src="{{ ASSET_URL }}"></script>
+			{% endassets %}
 
 			{% comment %}
 			<script type="text/javascript"><!--
@@ -211,12 +214,15 @@
 			//--></script>
 			{% endcomment %}
 
-            {% block js_add_scripts %}
-            {% endblock %}
+			{% block js_add_scripts %}
+			{% endblock %}
 
-            <script type="text/javascript">
-            loadScripts();
-            </script>
-        {% endblock js_footer %}
+			{% comment %}
+			# don't encourage people to use this loader!
+			<script type="text/javascript">
+			loadScripts();
+			</script>
+			{% endcomment %}
+		{% endblock js_footer %}
 	</body>
 </html>
