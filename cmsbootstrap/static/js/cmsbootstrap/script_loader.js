@@ -16,6 +16,12 @@ function loadScripts() {
         */
     }
 
+    if (scripts.length == 0)
+    {
+        // nothing to load
+        return;
+    }
+
     var head = document.getElementsByTagName("head")[0],
         script = document.createElement("script");
     script.type = "text/javascript";
