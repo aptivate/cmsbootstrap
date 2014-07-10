@@ -19,7 +19,7 @@ register('cmsbootstrap.common_css', common_css)
 ie8_css = Bundle(
     'css/cmsbootstrap/ie8.css',
     filters='cssmin',
-    output='css/cmsbootstrap/ie8.css',
+    output='css/cmsbootstrap/ie8.min.css',
     depends='sass/*.scss')
 
 register('cmsbootstrap.ie8_css', ie8_css)
