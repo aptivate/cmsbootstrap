@@ -6,7 +6,7 @@ bootstrap_css = Bundle(
     output='css/bootstrap.css',
     depends='sass/bootstrap/*.scss')
 
-register('bootstrap_css', bootstrap_css)
+register('cmsbootstrap.bootstrap_css', bootstrap_css)
 
 common_css = Bundle(
     'sass/cmsbootstrap.scss',

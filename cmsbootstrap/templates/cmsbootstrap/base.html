@@ -24,9 +24,9 @@
 
 		{% block css %}
 			{% block standard-css %}
-                {% assets "bootstrap_css", "cmsbootstrap_css" %}
-                    <link rel="stylesheet" href="{{ ASSET_URL }}" />
-                {% endassets %}
+				{% assets "cmsbootstrap.bootstrap_css", "cmsbootstrap.common_css" %}
+				    <link rel="stylesheet" href="{{ ASSET_URL }}" />
+				{% endassets %}
 			{% endblock standard-css %}
 
 			<!--[if lte IE 8]>

@@ -184,17 +184,37 @@ have them already.
 
 ### Add to `INSTALLED_APPS`
 
-Add `cmsbootstrap` to your INSTALLED_APPS setting like this::
+Add `django_assets` and `cmsbootstrap` to your INSTALLED_APPS setting like this::
 
     INSTALLED_APPS = (
         ...
+        'django_assets',
         'cmsbootstrap',
     )
 
-You'll need to add some templates too:
+Add `django_assets.finders.AssetsFinder` to your `STATICFILES_FINDERS`:
+
+    STATICFILES_FINDERS = (
+        'django.contrib.staticfiles.finders.FileSystemFinder',
+        'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+        'django_assets.finders.AssetsFinder',
+    )
+
+Ensure that you have the `LocaleMiddleware` enabled in your `MIDDLEWARE_CLASSES`:
+
+    MIDDLEWARE_CLASSES = (
+        # other middleware ...
+        'django.middleware.locale.LocaleMiddleware',
+    )
+
+You'll need to add some templates too. You don't need all of these, but you
+probably want at least one simple page design, a custom home page, and the
+global placeholders.
 
     CMS_TEMPLATES = (
-        ('cmsbootstrap/page_3col.html', 'CMS Simple Page'),
+        ('cmsbootstrap/page_1col.html', 'CMS Simple Page (no sidebars)'),
+        ('cmsbootstrap/page_3col.html', 'CMS Simple Page (both sidebars)'),
+        ('cmsbootstrap/page_3col_notitle.html', 'CMS Simple Page (without title, for plugins)'),
         ('cmsbootstrap/homepage.html', 'CMS Home Page'),
         ('cmsbootstrap/placeholders_extra.html', 'CMS Global Placeholders'),
     )

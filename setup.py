@@ -7,19 +7,27 @@ from setuptools import setup
 
 setup(
     name='cmsbootstrap',
-    version='0.140402',
-    author='Tom Daley and Chris Wilson',
+    version='0.140721',
+    author='http://www.aptivate.org/',
     author_email='support+cmsbootstrap@aptivate.org',
     packages=['cmsbootstrap'],
+    include_package_data=True,
     url='https://github.com/aptivate/cmsbootstrap',
     license='LICENSE',
     description='Django-CMS basic theme with Bootstrap to get you started quickly',
     #long_description=open('README.md').read(),
+    setup_requires = [ "setuptools_git >= 0.3", ],
     install_requires=[
         "Django >= 1.5, < 1.6",
         "django-cms >= 2.4.3, < 3.0c1",
+        # "django-assets >= 0.8",
         "django-assets >= 0.8",
         "south >= 0.8.4",
+        "pyScss >= 1.2.0.post3",
+        "cssmin >= 0.2.0",
+    ],
+    dependency_links=[
+        "git+https://github.com/miracle2k/django-assets.git@8b0a63fab4221cebd927b4022f4daae1a1f46b70#egg=django-assets",
     ],
     tests_require=[
     ],

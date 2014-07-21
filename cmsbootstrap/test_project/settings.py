@@ -9,6 +9,7 @@ import sys
 ########## DEFAULT DEBUG SETTINGS - OVERRIDE IN local_settings
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
+ASSETS_DEBUG = True
 ##########
 
 
@@ -99,6 +100,7 @@ STATICFILES_DIRS = (
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    'django_assets.finders.AssetsFinder',
 )
 ########## END STATIC FILE CONFIGURATION
 
@@ -122,19 +124,19 @@ DJANGO_APPS = (
     # Admin
     'django.contrib.admin',
 )
+
 THIRD_PARTY_APPS = (
-    'south',  # Database migration helpers:
-    #
-    'cms',
+    'south', # Database migration helper
+    'cms', # Django-CMS and its dependencies
     'mptt',
     'menus',
     'sekizai',
-    #
 )
 
 # Apps specific for this project go here.
 LOCAL_APPS = (
     # Your stuff: custom apps go here
+    'django_assets',
     'cmsbootstrap',
 )
 
@@ -151,6 +153,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
     # cms stuff
     'cms.middleware.user.CurrentUserMiddleware',
     'cms.middleware.page.CurrentPageMiddleware',
@@ -162,7 +165,7 @@ MIDDLEWARE_CLASSES = (
 
 
 ########## URL Configuration
-ROOT_URLCONF = 'test_project.urls'
+ROOT_URLCONF = 'urls'
 
 # Python dotted path to the WSGI application used by Django's runserver.
 # WSGI_APPLICATION = 'wsgi.application'
@@ -324,9 +327,9 @@ if 'test' in sys.argv:
     )
 
 
-CELERY_EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-EMAIL_BACKEND = 'djcelery_email.backends.CeleryEmailBackend'
-#EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+#CELERY_EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+#EMAIL_BACKEND = 'djcelery_email.backends.CeleryEmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 
 
