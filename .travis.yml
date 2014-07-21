@@ -1,0 +1,12 @@
+# http://jsatt.com/blog/using-tox-with-travis-ci-to-test-django-apps/
+# http://askubuntu.com/questions/125342/how-can-i-install-python-2-6-on-12-04
+language: python
+install:
+  - add-apt-repository ppa:fkrull/deadsnakes
+  - apt-get install python2.6 python2.6-dev
+  - pip install tox
+script:
+  - tox
+env:
+  - TOXENV=py26-django-1.5
+  - TOXENV=py27-django-1.5
