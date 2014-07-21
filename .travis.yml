@@ -2,8 +2,8 @@
 # http://askubuntu.com/questions/125342/how-can-i-install-python-2-6-on-12-04
 language: python
 install:
-  - add-apt-repository ppa:fkrull/deadsnakes
-  - apt-get install python2.6 python2.6-dev
+  - sudo add-apt-repository ppa:fkrull/deadsnakes
+  - sudo apt-get install python2.6 python2.6-dev
   - pip install tox
 script:
   - tox
