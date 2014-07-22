@@ -2,7 +2,7 @@
 
 Django-CMS extensible basic theme with Bootstrap to get you started quickly.
 
-![Build Status on Travis](https://travis-ci.org/aptivate/cmsbootstrap.svg?branch=master)
+[![Build Status on Travis](https://travis-ci.org/aptivate/cmsbootstrap.svg?branch=master)](https://travis-ci.org/aptivate/cmsbootstrap)
 
 ## Purpose
 
