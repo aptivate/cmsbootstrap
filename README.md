@@ -1,6 +1,8 @@
 # cmsbootstrap
 
-Django-CMS basic theme with Bootstrap to get you started quickly.
+Django-CMS extensible basic theme with Bootstrap to get you started quickly.
+
+![Build Status on Travis](https://travis-ci.org/aptivate/cmsbootstrap.svg?branch=master)
 
 ## Purpose
 
@@ -44,7 +46,7 @@ so that you can quickly enable and disable modules and change colours.
 ### Be lightweight
 
 Low bandwidth accessibility is a big part of our philosophy, and this theme
-needs to support that. Using Bootstrap/Sass enables us to enable and disable
+needs to support that. Using Bootstrap/Sass allows us to enable and disable
 Bootstrap modules quickly, so we can skip large chunks of CSS and keep the
 overall page weight small, while still being flexible.
 
@@ -81,6 +83,11 @@ every template with every possible extension point.
 For the same reason, our "API" to developers should be clear, simple, and
 stable: unlikely to change, or need to be changed in future to support newer
 versions of Django, Django-CMS, Bootstrap, etc.
+
+This allows developers using CMSBootstrap in their projects to upgrade to the
+latest version (for example, if there is a security vulnerability in the CSS,
+or to support a newer version of Django) with minimal risk that it will break
+their projects and require extensive repair.
 
 ### Be portable
 
