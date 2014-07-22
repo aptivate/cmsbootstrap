@@ -35,9 +35,11 @@
 
     {% block sidebar-right %}
     <section class="content_sidebar">
+        <section class="content_sidebar_inner">
         {% placeholder "default_sidebar" or %}
             {% show_placeholder "default_sidebar" "placeholders_extra" %}
         {% endplaceholder %}
-    </section>
+        </section><!-- class="content_sidebar_inner" -->
+    </section><!-- class="content_sidebar" -->
     {% endblock sidebar-right %}
 {% endblock content %}
