@@ -138,10 +138,12 @@ The Github project contains the following files and directories:
     * sass/bootstrap: Bootstrap Sass/SCSS source files.
     * sass/cmsbootstrap.scss: a few additional styles in Sass/SCSS format.
   * templates: the supplied templates.
-    * base.html: the root base template, intended to
-      be overridden by you.
+    * base.html: the root base template, connects our standard pages
+      (404.html and 500.html) to custom/base.html. You should not need to
+      override this.
     * cmsbootstrap: the example templates, not
       intended to be overridden but extended or ignored and replaced.
+    * custom: example templates for you to override. 
     * cmsbootstrap/menu/breadcrumb.html:
       render Django-CMS breadcrumbs using Bootstrap styles.
     * cmsbootstrap/menu/language_chooser.html:
@@ -191,7 +193,7 @@ have them already.
 
 ### Add to `INSTALLED_APPS`
 
-Add `django_assets` and `cmsbootstrap` to your INSTALLED_APPS setting like this::
+Add `django_assets` and `cmsbootstrap` to your INSTALLED_APPS setting like this:
 
     INSTALLED_APPS = (
         ...
@@ -199,6 +201,7 @@ Add `django_assets` and `cmsbootstrap` to your INSTALLED_APPS setting like this:
         'cmsbootstrap',
     )
 
+This allows Django to find the templates and static files that we've provided.
 Add `django_assets.finders.AssetsFinder` to your `STATICFILES_FINDERS`:
 
     STATICFILES_FINDERS = (
@@ -207,6 +210,7 @@ Add `django_assets.finders.AssetsFinder` to your `STATICFILES_FINDERS`:
         'django_assets.finders.AssetsFinder',
     )
 
+This allows `django-assets` to find the assets and compile them.
 Ensure that you have the `LocaleMiddleware` enabled in your `MIDDLEWARE_CLASSES`:
 
     MIDDLEWARE_CLASSES = (
@@ -214,20 +218,21 @@ Ensure that you have the `LocaleMiddleware` enabled in your `MIDDLEWARE_CLASSES`
         'django.middleware.locale.LocaleMiddleware',
     )
 
+Some of our templates use the `request.LANGUAGE_CODE` context variable, which
+requires LocaleMiddleware.
+
 You'll need to add some templates too. You don't need all of these, but you
 probably want at least one simple page design, a custom home page, and the
 global placeholders.
 
     CMS_TEMPLATES = (
-        ('cmsbootstrap/page_1col.html', 'CMS Simple Page (no sidebars)'),
-        ('cmsbootstrap/page_3col.html', 'CMS Simple Page (both sidebars)'),
-        ('cmsbootstrap/page_3col_notitle.html', 'CMS Simple Page (without title, for plugins)'),
-        ('cmsbootstrap/homepage.html', 'CMS Home Page'),
-        ('cmsbootstrap/placeholders_extra.html', 'CMS Global Placeholders'),
+        ('custom/page_1col.html', 'Simple Page (no sidebars)'),
+        ('custom/page_3col.html', 'Simple Page (both sidebars)'),
+        ('custom/page_3col_notitle.html', 'Simple Page (without title, for plugins)'),
+        ('custom/homepage.html', 'Home Page'),
+        ('custom/placeholders_extra.html', 'Global Placeholders'),
     )
 
-This allows Django to find the templates and static files that we've provided.
-It also allows `django-assets` to find the assets and compile them.
 
 ### Building the assets
 
@@ -273,84 +278,51 @@ can then customise or delete it as you wish):
 
 ## Customisation
 
-### Extending the provided templates
+### Template inheritance
 
-The default templates that we configured above live in the `cmsbootstrap`
-application:
+With Django-CMS, you can reuse templates by:
 
-    CMS_TEMPLATES = (
-        ('cmsbootstrap/page_3col.html', 'CMS Simple Page'),
-        ('cmsbootstrap/homepage.html', 'CMS Home Page'),
-        ('cmsbootstrap/placeholders_extra.html', 'CMS Global Placeholders'),
-    )
+* overriding a template file, by placing a file with the same name and path
+  in the `templates` directory of one of your own apps.
+* extending a template file, by creating a file with a *different* name that
+  starts with `{% extends "basetemplate.html" %}`.
 
-You could override these by creating templates of the same name in an
-application of your own. However you must ensure that your app loads after
-`cmsbootstrap` in the list of `INSTALLED_APPS`, and you cannot inherit from
-these templates if you override them using one of the same name. We recommend
-that you override only `base.html` (not `cmsbootstrap/base.html`) as follows.
+Note that you cannot *override* and *extend* the same file. Overriding loses
+access to the original file. Therefore we inserted some extra layers into the
+inheritance hierarchy (the templates in the `custom` directory), which do
+nothing useful by default, so you can override them without losing access to
+the real useful templates in the `cmsbootstrap` directory.
 
-For example, you can create an app called `main`:
+Also, because Django-CMS stores the actual filename of the template file in
+the database, you do not want to move templates around. Therefore the `custom`
+templates serve another function: you can use them in your `CMS_TEMPLATES`
+list instead of the CMSBootstrap versions, and get a default implementation
+from `cmsbootstrap` that does nothing. When you want to change the template
+in your project, create a `custom/homepage.html` (for example) in one of your
+apps (perhaps by copying the one from CMSBootstrap) and override some of the
+blocks that it inherits from `cmsbootstrap/homepage.html`.
 
-    django/website/manage.py startapp main
+### Template hierarchy
 
-Add it to `INSTALLED_APPS` in `django/website/settings.py`:
-
-    LOCAL_APPS = (
-        'main',
-    )
-
-Create a directory inside the app to hold your templates:
-
-    mkdir -p main/templates
-
-Create your own replacement base template, `main/templates/base.html`, with
-the following contents, overriding the one in
-`cmsbootstrap/templates/base.html`:
-
-    {% extends "cmsbootstrap/base.html" %}
-
-    {% load cms_tags sekizai_tags i18n %}
-
-    {% block html-title %}
-    <title>My Project! - {% block title %}{% page_attribute "page_title" %}{% endblock %}</title>
-    {% endblock html-title %}
-
-Note: the `htmltitle` block was copied from the one in
-`cmsbootstrap/templates/cmsbootstrap/base.html` and slightly modified. It
-overrides the block of the same name in that file. The other `cmsbootstrap`
-templates inherit from this one.
-
-Original inheritance tree:
-
-    CMS_TEMPLATES
-    => cmsbootstrap/homepage.html
-    -> base.html (in the cmsbootstrap app)
-    -> cmsbootstrap/base.html (in the cmsbootstrap app)
-
-New inheritance tree:
-
-    CMS_TEMPLATES
-    => cmsbootstrap/homepage.html
-    -> base.html (in the main app)
-    -> cmsbootstrap/base.html (in the cmsbootstrap app)
-
-Note: the only difference is *in which app* the `base.html` template is found
-by the Django template loader, which depends on the load order of applications
-in `settings.py`.
-
-### Defining new templates
-
-We recommend that you create templates in your own apps, similar to (perhaps
-based on) the sample templates in the `cmsbootstrap/templates/cmsbootstrap`
-directory (`homepage.html` and `page_3col_notitle.html`). In particular, we
-recommend that you start the templates with the following line:
-
-    {% extends "base.html" %}
-
-And override blocks defined in your base template (`main/templates/base.html`)
-and/or the `cmsbootstrap` base template from which it inherits
-(`cmsbootstrap/templates/cmsbootstrap/base.html`).
+* cmsbootstrap/base.html: a standard theme using CMS Bootstrap.
+  * base.html: adaptor for `404.html` and `500.html`.
+  * custom/base.html: replace this template to extend `cmsbootstrap/base.html`
+    * cmsbootstrap/homepage.html: an example home page with image rotator.
+    * cmsbootstrap/page_3col_notitle.html: an example three-column layout
+      with no title.
+      * custom/page_3col_notitle.html: replace this template to extend
+        `cmsbootstrap/page_3col_notitle.html`.
+        * cmsbootstrap/page_1col.html: adds a title, removes left and right
+          sidebars.
+          * custom/page_1col.html: replace this template to extend
+            `cmsbootstrap/page_1col.html`.
+        * cmsbootstrap/page_3col.html: adds a title.
+          * custom/page_3col.html: replace this template to extend
+            `cmsbootstrap/page_3col.html`.
+        * cmsbootstrap/placeholders_extra.html: template for a placeholder
+          page, that allows editing of text that appears on multiple pages.
+          * custom/placeholders_extra.html: replace this template to extend
+            `cmsbootstrap/placeholders_extra.html`.
 
 ## Customisation examples
 
