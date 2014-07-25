@@ -25,6 +25,7 @@ setup(
         "south >= 0.8.4",
         "pyScss >= 1.2.0.post3",
         "cssmin >= 0.2.0",
+        "jsmin >= 2.0.9",
     ],
     dependency_links=[
         "git+https://github.com/miracle2k/django-assets.git@8b0a63fab4221cebd927b4022f4daae1a1f46b70#egg=django-assets",
