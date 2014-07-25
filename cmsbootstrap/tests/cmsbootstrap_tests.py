@@ -12,3 +12,6 @@ class SimpleTest(TestCase):
 
         response = self.client.get('/en/')
         self.assertContains(response, 'CMSBootstrap')
+
+    def test_can_build_assets(self):
+        call_command('assets', 'build')
