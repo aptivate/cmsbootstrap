@@ -9,5 +9,7 @@ install:
 script:
   - tox
 env:
-  - TOXENV=py26-django-1.5
-  - TOXENV=py27-django-1.5
+  - TOXENV=py26-django15-cms2
+  - TOXENV=py26-django16-cms3
+  - TOXENV=py27-django15-cms2
+  - TOXENV=py27-django16-cms3
