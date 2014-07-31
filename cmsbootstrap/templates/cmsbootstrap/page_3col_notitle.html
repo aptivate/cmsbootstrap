@@ -3,43 +3,51 @@
 {% load cms_tags sekizai_tags %}
 {% load menu_tags %}
 
-{% block extra_class %}cmsbootstrap_page_3_columns{% endblock %}
+{% block template_name_class %}page_3_columns_notitle{% endblock %}
 
-{% block content %}
-	{% block sidebar-left %}
-    <nav class="content_submenu">
+{% block article %}
+	{% block sidebar_left %}
+    <nav class="sidebar_left">
 		{% with root=request.current_page.get_root %}
 		<ul class="nav nav-tabs nav-stacked">
 			{% show_menu_below_id root.reverse_id 0 100 100 100 %}
 		</ul>
 		{% endwith %}
 	</nav>
-    {% endblock sidebar-left %}
+    {% endblock sidebar_left %}
 
+	{% block content_body %}
     <article class="content_body">
-		<!--Django messages-->
-		{% if messages %}
-		{% for message in messages %}
-			<div class="alert{% if message.tags %} alert-{{ message.tags }}{% endif %}">
-			{{ message|safe }}
-		</div>
-		{% endfor %}
-		{% endif %}
+        {% block messages %}
+            <!--Django messages-->
+            {% if messages %}
+            {% for message in messages %}
+                <div class="alert{% if message.tags %} alert-{{ message.tags }}{% endif %}">
+                {{ message|safe }}
+            </div>
+            {% endfor %}
+            {% endif %}
+        {% endblock %}
+
         {% block main_section_title %}{% endblock %}
+
         <!-- Main content start -->
-		{% block main %}
+		{% block main_content %}
 			{% placeholder "main" %}
-		{% endblock main %}
+		{% endblock main_content %}
 		<!-- Main content end -->
     </article>
+	{% endblock content_body %}
 
-    {% block sidebar-right %}
-    <section class="content_sidebar">
-        <section class="content_sidebar_inner">
-        {% placeholder "default_sidebar" or %}
-            {% show_placeholder "default_sidebar" "placeholders_extra" %}
-        {% endplaceholder %}
-        </section><!-- class="content_sidebar_inner" -->
-    </section><!-- class="content_sidebar" -->
-    {% endblock sidebar-right %}
-{% endblock content %}
+    {% block sidebar_right %}
+    <div class="sidebar_right">
+        <div class="sidebar_right_inner">
+            {% block sidebar_right_content %}
+                {% placeholder "default_sidebar" or %}
+                    {% show_placeholder "default_sidebar" "placeholders_extra" %}
+                {% endplaceholder %}
+            {% endblock sidebar_right_content %}
+        </div><!-- class="sidebar_right_inner" -->
+    </div><!-- class="sidebar_right" -->
+    {% endblock sidebar_right %}
+{% endblock article %}

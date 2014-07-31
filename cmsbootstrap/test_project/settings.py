@@ -267,9 +267,11 @@ LOGGING = {
 ########## END BINDER STUFF
 
 CMS_TEMPLATES = (
-    ('cmsbootstrap/page_3col.html', 'CMS Simple Page'),
-    ('cmsbootstrap/homepage.html', 'CMS Home Page'),
-    ('cmsbootstrap/placeholders_extra.html', 'CMS Global Placeholders'),
+    ('custom/page_1col.html', 'Simple Page (no sidebars)'),
+    ('custom/page_3col.html', 'Simple Page (both sidebars)'),
+    ('custom/page_3col_notitle.html', 'Simple Page (without title, for plugins)'),
+    ('custom/homepage.html', 'Home Page'),
+    ('custom/placeholders_extra.html', 'Global Placeholders'),
 )
 
 # this section allows us to do a deep update of dictionaries

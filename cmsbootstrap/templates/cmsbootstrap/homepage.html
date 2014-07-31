@@ -2,26 +2,30 @@
 {% load i18n %}
 {% load cms_tags sekizai_tags %}
 {% load menu_tags %}
-{% block extra_class %}home twocol{% endblock %}
-{% block content %}
+
+{% block template_name_class %}homepage{% endblock %}
+
+{% block breadcrumb_wrap %}{# no breadcrumbs on homepage #}{% endblock %}
+
+{% block article %}
 	<div class="content_body">
-		<section class="row intro">
-			<article class="page_intro">
-				{% placeholder "Intro" %}
-			</article>
+		<div class="row intro">
+			<section class="page_intro">
+				{% placeholder "intro" %}
+			</section>
 			<section class="rotator page_features">
 				<div class="strip">
 					{% placeholder "rotator" %}
 				</div>
 			</section>
-		</section>
-		<section class="row latest">
-			<section class="latest_section latest_news">
-				{% with teaser_type="newsitem" %}{% placeholder "newsitems" %}{% endwith %}
+		</div>
+		<div class="row latest">
+			<section class="latest_section_1">
+				{% with teaser_type="latest_1" %}{% placeholder "latest_1" %}{% endwith %}
 			</section>
-			<section class="latest_section featured_researchers">
-				{% with teaser_type="researchers" %}{% placeholder "researchers" %}{% endwith %}
+			<section class="latest_section_2">
+				{% with teaser_type="latest_2" %}{% placeholder "latest_2" %}{% endwith %}
 			</section>
-		</section>
+		</div>
 	</div>
-{% endblock content %}
+{% endblock article %}

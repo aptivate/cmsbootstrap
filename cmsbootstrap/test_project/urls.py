@@ -4,6 +4,7 @@ from django.conf.urls.i18n import i18n_patterns
 from django.contrib import admin
 from django.conf import settings
 admin.autodiscover()
+import django.contrib.auth.urls
 
 urlpatterns = patterns('',
     # Examples:
@@ -15,6 +16,7 @@ urlpatterns = patterns('',
 
     # Uncomment the next line to enable the admin:
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^', include(django.contrib.auth.urls)),
 
     # This requires that static files are served from the 'static' folder.
     # The apache conf is set up to do this for you, but you will need to do it

@@ -1,6 +1,8 @@
 {% extends "custom/page_3col_notitle.html" %}
 {% load cms_tags sekizai_tags %}
 
+{% block template_name_class %}page_3_columns{% endblock %}
+
 {% block main_section_title %}
     <h1 class="title">{% page_attribute "page_title" %}</h1>
 {% endblock main_section_title %}

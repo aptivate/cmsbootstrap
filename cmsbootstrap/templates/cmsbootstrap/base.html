@@ -12,9 +12,9 @@
 <!--[if IE 9]><html class="ie ie9" lang="{{ LANGUAGE_CODE|default:"en" }}"><![endif]-->
 <!--[if !IE]><!--><html class="non-ie" lang="{{ LANGUAGE_CODE|default:"en" }}"><!--<![endif]-->
 	<head>
-		{% block html-title %}
+		{% block html_title %}
 			<title>CMSBootstrap - {% block title %}{% page_attribute "page_title" %}{% endblock %}</title>
-		{% endblock html-title %}
+		{% endblock html_title %}
 
 		<meta charset="utf-8" />
 
@@ -23,11 +23,11 @@
 		{% endblock %}
 
 		{% block css %}
-			{% block standard-css %}
+			{% block standard_css %}
 				{% assets "cmsbootstrap.bootstrap_css", "cmsbootstrap.common_css" %}
 				    <link rel="stylesheet" href="{{ ASSET_URL }}" />
 				{% endassets %}
-			{% endblock standard-css %}
+			{% endblock standard_css %}
 
 			<!--[if lte IE 8]>
 				{% assets "cmsbootstrap.ie8_js" %}
@@ -52,83 +52,81 @@
 
 		{% block js_header %}{% endblock %}
 	</head>
-	<body class="{{ request.current_page.get_root.get_slug }} page {{ LANGUAGE_CODE }} {% block extra_class %}{% endblock %}">
+	<body class="{% block body_classes %}slug_{{ request.current_page.get_root.get_slug }} page {{ LANGUAGE_CODE }} template_{% block template_name_class %}base{% endblock %}{% endblock %}">
 		{% cms_toolbar %}
 
-		<header class="header_site">
+        {% block header %}
+		<header class="{% block header_classes %}header_site container-fluid{% endblock %}" role="banner">
 			{% block logo %}{% endblock %}
 
+            {% block user_access %}
 			<nav class="user_access">
 				<a href="#maincontent" class="hide">{% trans "Skip to content" %}</a>
 
-				<div class="personaltools">
-					{% block personaltools %}{% endblock %}
+				<div class="personal_tools">
+					{% block personal_tools %}
+                        <div class="user_login">
+                            {% if user.is_staff %}
+                                <a class="user_login_link" href="/admin/">{% trans "Admin" %}</a>
+                            {% endif %}
 
-					{% comment %}
-					<div class="user_login">
-						{% if user.is_authenticated %}
-							{% if user.is_staff %}
-								<a class="user_login_link" href="/admin/">{% trans "Admin" %}</a>
-							{% endif %}
-							{% if RUNNING_TESTS %}
-								<a class="user_login_link" href="/fake/mentoring_dashboard">{% trans "Dashboard" %}</a>
-							{% else %}
-								<a class="user_login_link" href="{% url "mentoring_dashboard" %}">{% trans "Dashboard" %}</a>
-							{% endif %}
+                            {% if user.is_authenticated %}
+                                <a class="user_login_link" href="{% url "logout" %}">{% trans "Sign Out" %}</a>
+                            {% else %}
+                                <a class="user_login_link" href="{% url "login" %}">{% trans "Sign In" %}</a>
+                            {% endif %}
+                        </div>
 
-							<a class="user_login_link" href="{% url "auth_logout" %}">{% trans "Sign Out" %}</a>
-						{% else %}
-							<a class="user_login_link" href="{% url "auth_login" %}">{% trans "Sign In" %}</a>
-						{% endif %}
-					</div>
-					<span class="personal_bar_heading">- {% trans "New to AuthorAID?" %}
-						<a href="/about/what-is-authoraid">{% trans "find out more" %}</a>
-						{% if not user.is_authenticated %}
-						{% trans "or" %}
-						<a href="{% url "registration_register" %}">{% trans "join now" %}</a>
-						{% endif %}
-					</span>
-					{% endcomment %}
-				</div><!-- class="personaltools" -->
+                        <span class="personal_bar_heading">
+                            {% if not user.is_authenticated %}
+                                {% comment %}
+                                <a href="{% url "registration_register" %}">{% trans "join now" %}</a>
+                                {% endcomment %}
+                            {% endif %}
+                        </span>
+                    {% endblock personal_tools %}
+				</div><!-- class="personal_tools" -->
 			</nav>
+            {% endblock user_access %}
 
-			{% block search-box %}{% endblock %}
-
+			{% block search_box %}
 			{% comment %}
 			<form class="navbar-search" action="{% page_url "search" %}">
 				<input type="text" name="q" id="id_q" value="{{ request.GET.q }}" class="search-query" placeholder="{% trans "Search" %}" />
 				<input type="submit" class="btn" value="{% trans "Search" %}" />
 			</form>
 			{% endcomment %}
+            {% endblock search_box %}
 
-			{% block top-navigation %}
-			<ul class="{% block top-navigation-classes%}top-navigation nav nav-pills{% endblock %}" role="navigation">
-				{% block navbar-nav %}
-				{% show_menu 0 0 0 0 "cmsbootstrap/menu/menu.html" %}
-				{% block language-menu %}
-				<li class="dropdown">
-					<a class="dropdown-toggle" id="language-menu" data-toggle="dropdown">
-						{% trans "Language" %}
-						<span class="caret"></span>
-					</a>
-					<ul class="dropdown-menu language-menu nav-pills" role="menu" aria-labelledby="language-menu">
-						{% load menu_tags %}
-						{% language_chooser "cmsbootstrap/menu/language_chooser.html" %}
-					</ul>
-				</li>
-				{% endblock language-menu %}
-				{% endblock navbar-nav %}
+			{% block header_nav %}
+			<ul class="{% block header_nav_classes %}header_nav nav nav-pills{% endblock %}" role="navigation">
+				{% block header_nav_menu %}
+                    {% show_menu 0 0 0 0 "cmsbootstrap/menu/menu.html" %}
+                    {% block language_menu %}
+                    <li class="language_menu_item dropdown">
+                        <a class="dropdown-toggle" id="language_menu_label" data-toggle="dropdown">
+                            {% trans "Language" %}
+                            <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu language_menu nav-pills" role="menu" aria-labelledby="language_menu_label">
+                            {% load menu_tags %}
+                            {% language_chooser "cmsbootstrap/menu/language_chooser.html" %}
+                        </ul>
+                    </li>
+                    {% endblock language_menu %}
+				{% endblock header_nav_menu %}
 			</ul>
-			{% endblock %}
+			{% endblock header_nav %}
 		</header>
+        {% endblock header %}
 
-		{% block content-wrapper %}
-		<section class="content-wrapper row">
+		{% block main %}
+		<main class="{% block main_classes %}container-fluid{% endblock %}" role="main">
 			<a id="maincontent"></a>
 
-			{% block breadcrumbs %}
-			<div class="breadcrumb_wrap">
-				<ul class="breadcrumb">
+			{% block breadcrumb_wrap %}
+			<div class="{% block breadcrumb_wrap_classes %}breadcrumb_wrap row{% endblock %}">
+				<ul class="{% block breadcrumb_classes %}breadcrumb col-sm-12{% endblock %}">
 				{% if custom_breadcrumb %}
 					{% for breadcrumb in custom_breadcrumb %}
 					<li>{% if not forloop.last %}<a href="{{ breadcrumb.url }}">{% endif %}{{ breadcrumb.title }}{% if not forloop.last %}</a><span class="divider">/</span>{% endif %}</li>
@@ -138,28 +136,28 @@
 				{% endif %}
 				</ul>
 			</div><!-- .breadcrumb_wrap -->
-			{% endblock breadcrumbs %}
+			{% endblock breadcrumb_wrap %}
 
-			<!--Body content-->
-			<section class="content">
-			{% block content %}
-			{% endblock %}
-			</section><!-- .content -->
-		</section><!-- .content-wrapper -->
-		{% endblock content-wrapper %}
+            {% block article %}
+			<article class="main_article">
+                {% block content %}{% endblock %}
+			</article>
+            {% endblock %}
+		</main>
+		{% endblock main %}
 
 		{% block footer %}
-		<footer class="footer_site">
-			<nav class="{% block footer-nav-classes %}navbar navbar-default{% endblock %}" role="navigation">
-				<section class="footer_left navbar-left navbar-text">
+		<footer class="{% block footer_classes %}container-fluid{% endblock %}" role="contentinfo">
+			<nav class="{% block footer_nav_classes %}navbar navbar-default{% endblock %}" role="navigation">
+				<div class="footer_left navbar-left navbar-text">
 					{% show_placeholder "footer_left" "placeholders_extra" %}
-				</section>
-				<section class="footer_right navbar-right navbar-text">
+				</div>
+				<div class="footer_right navbar-right navbar-text">
 					{% show_placeholder "footer_right" "placeholders_extra" %}
 					{% block credits %}
 					{% trans "Site by" %} <a href="http://www.aptivate.org">Aptivate</a>
 					{% endblock %}
-				</section>
+				</div>
 			</nav>
 		</footer>
 		{% endblock footer %}
@@ -212,16 +210,6 @@
 				});
 			}
 			//--></script>
-			{% endcomment %}
-
-			{% block js_add_scripts %}
-			{% endblock %}
-
-			{% comment %}
-			# don't encourage people to use this loader!
-			<script type="text/javascript">
-			loadScripts();
-			</script>
 			{% endcomment %}
 		{% endblock js_footer %}
 	</body>
