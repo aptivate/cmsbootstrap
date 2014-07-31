@@ -269,3 +269,6 @@ class SimpleTest(FastDispatchMixin, HtmlParsingMixin, TestCase):
         self.query(body, 'main > div.content_body > div.row.latest')
         self.query(body, 'main > div.content_body > div.row.latest > section.latest_section_1')
         self.query(body, 'main > div.content_body > div.row.latest > section.latest_section_2')
+
+    def test_can_build_assets(self):
+        call_command('assets', 'build')
