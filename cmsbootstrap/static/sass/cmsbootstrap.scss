@@ -2,6 +2,22 @@
 	display: inherit;
 }
 
+.page_intro {
+    border: 5px solid #ddd;
+    padding: 1em;
+}
+
+.page_features {
+    border: 5px solid #eee;
+    border-radius: 10px;
+    padding: 1em;
+}
+
+.latest > section {
+    background: #eee;
+    padding: 1em;
+}
+
 .footer_right .plugin_link:after {
 	content: " | ";
 }

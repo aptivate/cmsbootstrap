@@ -10,21 +10,24 @@
 {% block article %}
 	<div class="content_body">
 		<div class="row intro">
-			<section class="page_intro">
+			<section class="page_intro col-sm-8">
 				{% placeholder "intro" %}
 			</section>
-			<section class="rotator page_features">
+			<section class="rotator page_features col-sm-4">
 				<div class="strip">
 					{% placeholder "rotator" %}
 				</div>
 			</section>
 		</div>
 		<div class="row latest">
-			<section class="latest_section_1">
+			<section class="latest_section_1 col-sm-4">
 				{% with teaser_type="latest_1" %}{% placeholder "latest_1" %}{% endwith %}
 			</section>
-			<section class="latest_section_2">
+			<section class="latest_section_2 col-sm-4">
 				{% with teaser_type="latest_2" %}{% placeholder "latest_2" %}{% endwith %}
+			</section>
+			<section class="latest_section_3 col-sm-4">
+				{% with teaser_type="latest_3" %}{% placeholder "latest_3" %}{% endwith %}
 			</section>
 		</div>
 	</div>
