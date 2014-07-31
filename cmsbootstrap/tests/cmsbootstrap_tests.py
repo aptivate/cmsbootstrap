@@ -200,9 +200,15 @@ class SimpleTest(FastDispatchMixin, HtmlParsingMixin, TestCase):
         self.assert_override_block(self.home.template, 'sidebar_right_content',
             'html > body > main > .sidebar_right > .sidebar_right_inner', skip=skip)
 
+    def publish_page(self, page):
+        try:
+            page.publish() # cms2
+        except TypeError:
+            page.publish('en') # cms3
+
     def test_page_3col_notitle_structure(self):
         self.home.template = 'custom/page_3col_notitle.html'
-        self.home.publish()
+        self.publish_page(self.home)
 
         response = self.client.get('/en/')
         self.assertEquals(self.home.template, response.templates[0].name)
@@ -215,7 +221,7 @@ class SimpleTest(FastDispatchMixin, HtmlParsingMixin, TestCase):
 
     def test_page_3col_structure(self):
         self.home.template = 'custom/page_3col.html'
-        self.home.publish()
+        self.publish_page(self.home)
 
         response = self.client.get('/en/')
         self.assertEquals(self.home.template, response.templates[0].name)
@@ -230,7 +236,7 @@ class SimpleTest(FastDispatchMixin, HtmlParsingMixin, TestCase):
 
     def test_page_1col_structure(self):
         self.home.template = 'custom/page_1col.html'
-        self.home.publish()
+        self.publish_page(self.home)
 
         response = self.client.get('/en/')
         self.assertEquals(self.home.template, response.templates[0].name)
@@ -253,7 +259,7 @@ class SimpleTest(FastDispatchMixin, HtmlParsingMixin, TestCase):
 
     def test_homepage_structure(self):
         self.home.template = 'custom/homepage.html'
-        self.home.publish()
+        self.publish_page(self.home)
 
         response = self.client.get('/en/')
         self.assertEquals(self.home.template, response.templates[0].name)
