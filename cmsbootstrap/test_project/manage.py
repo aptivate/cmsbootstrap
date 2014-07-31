@@ -7,10 +7,6 @@ from os import path
 PROJECT_ROOT = path.abspath(path.dirname(__file__))
 DEPLOY_DIR = path.abspath(path.join(PROJECT_ROOT, os.pardir, 'dye', 'deploy'))
 sys.path.append(DEPLOY_DIR)
-import ve_mgr
-
-# check python version is high enough
-ve_mgr.check_python_version(2, 6, __file__)
 
 # ignore the usual virtualenv
 # note that for runserver Django will start a child process, so that it
@@ -23,6 +19,11 @@ if '--ignore-ve' in sys.argv:
 # VIRTUAL_ENV will be set if we are already inside a virtualenv (either because
 # of standard virtualenv activate, or because go_to_ve() set it).
 if 'IGNORE_DOTVE' not in os.environ and 'VIRTUAL_ENV' not in os.environ:
+    import ve_mgr
+
+    # check python version is high enough
+    ve_mgr.check_python_version(2, 6, __file__)
+
     # if it appears that the virtualenv is out of date then stop here
     updater = ve_mgr.UpdateVE()
     if updater.virtualenv_needs_update():
