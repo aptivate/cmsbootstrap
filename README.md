@@ -340,7 +340,7 @@ customisations that are possible. Only a few are listed here.
 This is the base template which includes most of the HTML structure to build
 a basic website out of Bootstrap:
 
-![Base template HTML structure](images/base-template-html-structure.svg)
+![Base template HTML structure](images/base-template-html-structure.png)
 
 Elements that you're likely to remove or replace completely are wrapped in
 template blocks with the same name as the element or its CSS class:
