@@ -20,8 +20,7 @@ setup(
     install_requires=[
         "Django", # 1.5 or 1.6
         "django-cms", # 2.4 or 3.0
-        # "django-assets >= 0.8",
-        "django-assets >= 0.8",
+        "django-assets >= 0.10",
         "south >= 0.8.4",
         "pyScss >= 1.2.0.post3",
         "cssmin >= 0.2.0",
