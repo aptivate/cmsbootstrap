@@ -4,6 +4,8 @@ Django-CMS extensible basic theme with Bootstrap to get you started quickly.
 
 [![Build Status on Travis](https://travis-ci.org/aptivate/cmsbootstrap.svg?branch=master)](https://travis-ci.org/aptivate/cmsbootstrap)
 
+![Sample Screenshot](images/screenshot.png)
+
 ## Purpose
 
 Django-CMS is very powerful, but comes with no themes by default.
@@ -14,7 +16,8 @@ Django-CMS is very powerful, but comes with no themes by default.
 
 That's all very well, but everyone wanting to start a new project with
 Django-CMS faces a lot of study, effort and difficult choices just to get
-their first pages to display sensibly. This is where we can help.
+their first pages to display sensibly. CMSBootstrap aims to get you started in
+minutes, with a quality extensible base to build your site on.
 
 ## Philosophy
 
@@ -126,33 +129,19 @@ The Github project contains the following files and directories:
   * static: static resources: Sass/SCSS, CSS and JavaScript.
     * bootstrap-sass-3.1.1.tar.gz: the complete sources for
       the supplied version of Bootstrap (in Sass/SCSS format).
-    * css/cmsbootstrap/ie7.css: Internet Explorer 7
-      compatibility CSS library (minimal, just for the included styles).
-    * css/cmsbootstrap/ie8.css: Internet Explorer 8
-      compatibility CSS library (minimal, just for the included styles).
+    * cmsbootstrap: CSS and JavaScript files:
+      * ie7.css: Internet Explorer 7
+        compatibility CSS library (minimal, just for the included styles).
+      * ie8.css: Internet Explorer 8
+        compatibility CSS library (minimal, just for the included styles).
+      * html5shiv.js, lte-ie7.js, respond.min.js: compatibility
+        libraries for Internet Explorer 8 (responsive media queries and HTML5
+        elements).
     * js/bootstrap.js, js/bootstrap: the JavaScript libraries supplied with
       Bootstrap.
-    * js/html5shiv.js, js/lte-ie7.js, js/respond.min.js: compatibility
-      libraries for Internet Explorer 8 (responsive media queries and HTML5
-      elements).
     * sass/bootstrap: Bootstrap Sass/SCSS source files.
     * sass/cmsbootstrap.scss: a few additional styles in Sass/SCSS format.
-  * templates: the supplied templates.
-    * base.html: the root base template, connects our standard pages
-      (404.html and 500.html) to custom/base.html. You should not need to
-      override this.
-    * cmsbootstrap: the example templates, not
-      intended to be overridden but extended or ignored and replaced.
-    * custom: example templates for you to override. 
-    * cmsbootstrap/menu/breadcrumb.html:
-      render Django-CMS breadcrumbs using Bootstrap styles.
-    * cmsbootstrap/menu/language_chooser.html:
-      render Django-CMS language chooser using Bootstrap styles.
-    * cmsbootstrap/menu/menu.html:
-      render Django-CMS menus using Bootstrap styles.
-    * cmsbootstrap/placeholders_extra.html:
-      template with placeholders for extra bits of text that can be inserted
-      into other pages.
+  * templates: the supplied templates, described in detail below.
   * tests: test cases for cmsbootstrap, may be affected by
     your own application choices (e.g. changing URLs, languages or pages.)
   * views.py: no views are currently provided.
@@ -233,6 +222,30 @@ global placeholders.
         ('custom/placeholders_extra.html', 'Global Placeholders'),
     )
 
+### Configuration for Crispy Forms
+
+Although not required by CMSBootstrap itself, you might want to add this
+setting so that you'll be ready if you decide to start using
+[Crispy Forms](http://django-crispy-forms.readthedocs.org/en/latest/)
+(recommended) in your project at some point:
+
+    CRISPY_TEMPLATE_PACK = 'bootstrap3'
+
+### Add django.contrib.auth URLs
+
+The standard template has login and logout buttons, for which you need to have
+the `django.contrib.auth.urls` URL patterns installed somewhere in your URL
+map. Otherwise you'll get an error:
+
+> NoReverseMatch at /en/
+>
+> Reverse for 'login' with arguments '()' and keyword arguments '{}' not found. 0 pattern(s) tried: []
+
+If you get this error message, you can add the following lines to your project's
+`urls.py` to resolve it:
+
+    import django.contrib.auth.urls
+    urlpatterns += patterns('', url('', include(django.contrib.auth.urls)))
 
 ### Building the assets
 
@@ -257,7 +270,8 @@ And run the development server (in a spare terminal):
 
     django/website/manage.py runserver
 
-You should be able to access http://localhost:8000/ and see the Django-CMS pony.
+You should be able to access http://localhost:8000/ and see the Django-CMS pony
+or welcome page.
 
 ### Starting your site
 
@@ -278,106 +292,198 @@ can then customise or delete it as you wish):
 
 ## Customisation
 
-### Template inheritance
+### About Django templates
 
-With Django-CMS, you can reuse templates by:
+In Django you can reuse templates by:
 
 * overriding a template file, by placing a file with the same name and path
   in the `templates` directory of one of your own apps.
 * extending a template file, by creating a file with a *different* name that
   starts with `{% extends "basetemplate.html" %}`.
 
-Note that you cannot *override* and *extend* the same file. Overriding loses
-access to the original file. Therefore we inserted some extra layers into the
-inheritance hierarchy (the templates in the `custom` directory), which do
-nothing useful by default, so you can override them without losing access to
-the real useful templates in the `cmsbootstrap` directory.
+Note that you cannot both **override** and **extend** the same file. Overriding
+a file hides the original file, so you can no longer access it or inherit from
+it.
 
-Also, because Django-CMS stores the actual filename of the template file in
+Therefore we inserted some extra layers into the inheritance hierarchy: the
+templates in the `custom` directory. They extend the real templates from the
+`cmsbootstrap` directory, and make no changes by default. You can copy them
+into your own app (with the same directory name, `custom`), thus overriding
+the ones in CMSBootstrap. Note that:
+
+* `custom` templates extend the **eponymous** template in `cmsbootstrap`.
+* `cmsbootstrap` templates extend a parent template in `custom`.
+
+### Django-CMS page templates
+
+Because Django-CMS stores the actual filename of the template file in
 the database, you do not want to move templates around. Therefore the `custom`
 templates serve another function: you can use them in your `CMS_TEMPLATES`
 list instead of the CMSBootstrap versions, and get a default implementation
-from `cmsbootstrap` that does nothing. When you want to change the template
-in your project, create a `custom/homepage.html` (for example) in one of your
-apps (perhaps by copying the one from CMSBootstrap) and override some of the
-blocks that it inherits from `cmsbootstrap/homepage.html`.
+from `cmsbootstrap` that does nothing.
 
-### Template hierarchy
+When you want to change the template in your project, create a
+`custom/homepage.html` (for example) in one of your apps (perhaps by copying
+the one from CMSBootstrap) and override some of the blocks that it inherits
+from `cmsbootstrap/homepage.html`.
 
-* cmsbootstrap/base.html: a standard theme using CMS Bootstrap.
-  * base.html: adaptor for `404.html` and `500.html`.
-  * custom/base.html: replace this template to extend `cmsbootstrap/base.html`
-    * cmsbootstrap/homepage.html: an example home page with image rotator.
-    * cmsbootstrap/page_3col_notitle.html: an example three-column layout
-      with no title.
-      * custom/page_3col_notitle.html: replace this template to extend
-        `cmsbootstrap/page_3col_notitle.html`.
-        * cmsbootstrap/page_1col.html: adds a title, removes left and right
-          sidebars.
-          * custom/page_1col.html: replace this template to extend
-            `cmsbootstrap/page_1col.html`.
-        * cmsbootstrap/page_3col.html: adds a title.
-          * custom/page_3col.html: replace this template to extend
-            `cmsbootstrap/page_3col.html`.
-        * cmsbootstrap/placeholders_extra.html: template for a placeholder
-          page, that allows editing of text that appears on multiple pages.
-          * custom/placeholders_extra.html: replace this template to extend
-            `cmsbootstrap/placeholders_extra.html`.
+## Included templates
 
-## Customisation examples
+Note that each template appears in two directories, `cmsbootstrap` and
+`custom`, as described above.
 
-### Change the site credits
+It's recommended that you read the template files to discover all the
+customisations that are possible. Only a few are listed here.
 
-For some strange reason, you might want your pages to end with "Site by Cool
-Dude" instead of "Site by Aptivate". You can do that by overriding the `credits`
-block of the base template, placing the following code in your `base.html`:
+### base.html
 
-	{% block credits %}
-	{% trans "Site by" %} <a href="http://www.example.com">Cool Dude</a>
-	{% endblock %}
+This is the base template which includes most of the HTML structure to build
+a basic website out of Bootstrap:
 
-### Change the top menu to a Bootstrap [Navbar](http://getbootstrap.com/components/#navbar).
+![Base template HTML structure](images/base-template-html-structure.svg)
 
-You'll need to wrap the `top-navigation` block in some additional markup:
+Elements that you're likely to remove or replace completely are wrapped in
+template blocks with the same name as the element or its CSS class:
 
-	{% load i18n %}
+* `viewport`: <meta name="viewport">
+* `media`: all CSS and Javascript. You can override this to add CSS and
+  early-loading JavaScript if you don't want to use assets.
+* `header`: <header class="{% block header_classes %}header_site container-fluid{% endblock %}">
+* `logo`: the default/dummy CMSBootstrap logo.
+* `user_access`: <nav class="user_access">
+* `user_login_links`: <div class="user_login_links">
+* `header_nav: HTML5 <nav> element:
+  <nav class="{% block header_nav_classes %}cmsbootstrap_header navbar navbar-default{% endblock %}">,
+  a Bootstrap navbar for top navigation.
+* `header_nav_brand`: empty by default, you can override this to include your branding inside the header navbar
+  instead of above it.
+* `header_nav_menu`: the Django-CMS top-level menu: {% show_menu 0 0 0 0 "cmsbootstrap/menu/menu.html" %}
+* `language_menu`: the Django-CMS language chooser
+* `main`: HTML5 <main> element: <main class="{% block main_classes %}container-fluid{% endblock %}">
+* `breadcrumb_wrap`: the wrapper for the Django-CMS breadcrumbs element
+* `article`: HTML5 <article> element: <article class="main_article">. You can
+  override this to add left and right sidebars inside <main>, as the
+  page_3col_notitle.html template does.
+* `content`: empty by default, you can override this to hold your pages' main
+  content, placeholder or application.
+* `footer`: <footer class="{% block footer_classes %}cmsbootstrap_footer container-fluid{% endblock %}">
+* `js_footer`: loads most JavaScript assets. You can override this to add
+  late-loading JavaScript in pages if you don't want to use assets.
 
-	{% block top-navigation %}
-	<nav class="navbar navbar-default" role="navigation">
-		<div class="container-fluid">
-			<!-- Brand and toggle get grouped for better mobile display -->
-			<div class="navbar-header">
-				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-					<span class="sr-only">Toggle navigation</span>
-					<span class="icon-bar"></span>
-					<span class="icon-bar"></span>
-					<span class="icon-bar"></span>
-				</button>
-				<a class="navbar-brand" href="#">Cool Dude</a>
-			</div>
+### homepage.html
 
-			<!-- Collect the nav links, forms, and other content for toggling -->
-			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-				{{ block.super }}
-			</div>
-		</div>
-	</nav>
-	{% endblock %}
+An example home page with image rotator with a few image blocks.
 
-And change the CSS classes of the `<ul class="top-navigation">` element as well:
+### page_3col_notitle.html
 
-	{% block top-navigation-classes%}
-	top-navigation nav navbar-nav
-	{% endblock %}
+An example three-column layout with no page title.
 
-### Adding CSS styles
+### page_3col.html
 
-You can add a static CSS file to the base template easily:
+Extends page_3col_notitle.html and adds a title.
 
-	{% block css %}
-		{{ block.super }}
-		<link rel="stylesheet" href="{{ STATIC_URL }}css/additional-static.css" />
-	{% endblock %}
+### page_1col.html
+
+Extends page_3col_notitle.html, adds a title and removes the sidebars.
+
+### placeholders_extra.html
+
+This template exists so that you can add static content that appears on
+multiple pages (headers, footers, etc.) and edit it using the Django-CMS
+front end.
+
+To do that, create a page (just one!) using this template, with the reverse_id
+`placeholders_extra`, and populate the placeholders in it with your static
+content.
+
+To add new placeholders, override this page and add some new placeholders:
+
+    {% placeholder "footer_middle" %}
+
+And then include it in your other templates somewhere:
+
+    {% show_placeholder "footer_middle" "placeholders_extra" %}
+
+### cmsbootstrap/menu/menu.html
+
+Renders a Django-CMS menu item in a way that works with Bootstrap Navbar.
+
+### cmsbootstrap/menu/language_chooser.html
+
+Renders a Django-CMS menu item in a way that works with Bootstrap Navbar
+as a subitem of the Language item dropdown.
+
+### cmsbootstrap/menu/breadcrumb.html
+
+Renders a Django-CMS breadcrumb item in a way that works with the standard
+breadcrumb list.
+
+### base.html
+
+In addition there is another template file called `base.html` above the
+`cmsbootstrap` directory, which is just an adaptor for `404.html` and
+`500.html` in [DYE](http://github.com/aptivate/dye), and is not used otherwise.
+
+### CSS classes
+
+Many elements have CSS classes to help you target them:
+
+* <html>
+  * Some classes to help you write browser-specific CSS using conditional comments:
+  * `ie ie6` if the user's browser is Internet Explorer 6
+  * `ie ie7` if the user's browser is Internet Explorer 7
+  * `ie ie8` if the user's browser is Internet Explorer 8
+  * `ie ie9` if the user's browser is Internet Explorer 9
+  * `non-ie` if the user's browser is not Internet Explorer (or IE >= 10)
+* <body>
+  * `slug_`<Django_CMS slug for the current page>, e.g. `slug_home`, `slug_about`.
+  * `lang_`<the current language code>, e.g. `lang_en`
+  * `template_`<a name for the current template>, e.g. `page_1_column`, `page_3_column_notitle`.
+  * all wrapped in a `body_classes` block to allow you to override them.
+* <header>
+  * `cmsbootstrap_header` (also carried by <nav>, so you need to target `header.cmsbootstrap_header`)
+  * `container-fluid` to enable Bootstrap fluid rows to be placed inside.
+  * all wrapped in a `header_classes` block to allow you to override them.
+* <nav> (login links)
+  * `user_access`
+* <nav> Bootstrap top navbar
+  * `cmsbootstrap_header` (also carried by <header>, so you need to target `nav.cmsbootstrap_header`)
+  * `navbar` and `navbar-default` to get Bootstrap Navbar styling
+  * all wrapped in a `header_nav_classes` block to allow you to override them.
+* <main> (the main content part of the page, between header and footer)
+  * container-fluid (Bootstrap layout)
+  * wrapped in a `main_classes` block to allow you to override it.
+* <article> (the main content part of the <main> element, between any sidebars)
+  * `main_article`
+  * just override the `article` block if you want to change the classes.
+* <footer>
+  * `cmsbootstrap_footer`
+  * `container-fluid`
+  * all wrapped in a `footer_classes` block to allow you to override them.
+
+## Assets
+
+You can import the assets from `cmsbootstrap.assets` into your own assets
+module and add extra files to combine them into a single asset, minified and
+compressed, to avoid creating extra HTTP requests, like this:
+
+	import cmsbootstrap.assets as cmsbootstrap
+	myapp_css = Bundle(
+	    cmsbootstrap.common_css,
+	    'sass/myapp.scss',
+	    filters='pyscss, cssmin',
+	    output='css/myapp/my.min.css')
+	register('myapp.myapp_css', myapp_css)
+
+To avoid including the standard CMSBootstrap files a second time, you'll want
+to override the `standard_css` block, replacing its contents with your own
+asset, in the `base.html` template:
+
+	{% block standard_css %}
+		{% assets "myapp.myapp_css" %}
+		    <link rel="stylesheet" href="{{ ASSET_URL }}" />
+		{% endassets %}
+	{% endblock standard_css %}
 
 ### Adding SCSS styles
 
