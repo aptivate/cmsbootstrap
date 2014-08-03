@@ -12,9 +12,13 @@
 <!--[if IE 9]><html class="ie ie9" lang="{{ LANGUAGE_CODE|default:"en" }}"><![endif]-->
 <!--[if !IE]><!--><html class="non-ie" lang="{{ LANGUAGE_CODE|default:"en" }}"><!--<![endif]-->
 	<head>
-		{% block html_title %}
-			<title>CMSBootstrap - {% block title %}{% page_attribute "page_title" %}{% endblock %}</title>
-		{% endblock html_title %}
+		<title>
+			{% block title %}
+				{% block site_name %}CMSBootstrap{% endblock %}
+				-
+				{% block page_title %}{% page_attribute "page_title" %}{% endblock page_title %}
+			{% endblock title %}
+		</title>
 
 		<meta charset="utf-8" />
 
@@ -22,13 +26,17 @@
 			<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
 		{% endblock %}
 
-		{% block css %}
+		{# sekizai can't be inside a block! #}
+		{% render_block "css" %}
+
+		{% block media %}
 			{% block standard_css %}
-				{% assets "cmsbootstrap.bootstrap_css", "cmsbootstrap.common_css" %}
+				{% assets "cmsbootstrap.common_css" %}
 				    <link rel="stylesheet" href="{{ ASSET_URL }}" />
 				{% endassets %}
 			{% endblock standard_css %}
 
+			{% block ie8_head %}
 			<!--[if lte IE 8]>
 				{% assets "cmsbootstrap.ie8_js" %}
 					<script type="text/javascript" src="{{ ASSET_URL }}"></script>
@@ -37,55 +45,72 @@
 					<link rel="stylesheet" href="{{ ASSET_URL }}" />
 				{% endassets %}
 			<![endif]-->
+			{% endblock ie8_head %}
+
+			{% block ie7_head %}
 			<!--[if lte IE 7]>
-				<script src="{{ STATIC_URL }}js/lte-ie7.js" type="text/javascript"></script>
-				<link rel="stylesheet" href="{{ STATIC_URL }}css/ie7.css" />
+				{% assets "cmsbootstrap.ie7_js" %}
+					<script type="text/javascript" src="{{ ASSET_URL }}"></script>
+				{% endassets %}
+				{% assets "cmsbootstrap.ie7_css" %}
+					<link rel="stylesheet" href="{{ ASSET_URL }}" />
+				{% endassets %}
 			<![endif]-->
-		{% endblock css %}
-		{% render_block "css" %}
+			{% endblock ie7_head %}
 
-		{% block form-media %}
-			{% if form %}
-				{{ form.media }}
-			{% endif %}
-		{% endblock form-media %}
-
-		{% block js_header %}{% endblock %}
+			{% block form_media %}
+				{% if form %}
+					{{ form.media }}
+				{% endif %}
+			{% endblock form_media %}
+		{% endblock media %}
+		
 	</head>
-	<body class="{% block body_classes %}slug_{{ request.current_page.get_root.get_slug }} page {{ LANGUAGE_CODE }} template_{% block template_name_class %}base{% endblock %}{% endblock %}">
+	<body class="{% block body_classes %}slug_{{ request.current_page.get_root.get_slug }} lang_{{ LANGUAGE_CODE }} template_{% block template_name_class %}base{% endblock %}{% endblock %}">
 		{% cms_toolbar %}
 
         {% block header %}
-		<header class="{% block header_classes %}header_site container-fluid{% endblock %}" role="banner">
-			{% block logo %}{% endblock %}
+		<header class="{% block header_classes %}cmsbootstrap_header container-fluid{% endblock %}" role="banner">
+			{% block logo %}
+				<div class="logo">
+					<div class="row">
+						<div class="col-sm-6">
+							<img src="{{ STATIC_URL }}images/bootstrap-solid.svg" 
+								style="height: 60px; float: left; margin-right: 1em; vertical-align: baseline;" />
+							<h1 style="font-size: 40px; margin: 12px 0 8px; line-height: 1; color: #563d7c;">CMSBootstrap</h1>
+						</div>
+					</div>
+
+				</div>
+			{% endblock %}
 
             {% block user_access %}
 			<nav class="user_access">
 				<a href="#maincontent" class="hide">{% trans "Skip to content" %}</a>
 
-				<div class="personal_tools">
-					{% block personal_tools %}
-                        <div class="user_login">
-                            {% if user.is_staff %}
-                                <a class="user_login_link" href="/admin/">{% trans "Admin" %}</a>
-                            {% endif %}
+				<div class="user_login_links">
+					{% block user_login_links %}
+					<div class="user_login_links">
+					    {% if user.is_staff %}
+						<a class="user_login_link" href="/admin/">{% trans "Admin" %}</a>
+					    {% endif %}
 
-                            {% if user.is_authenticated %}
-                                <a class="user_login_link" href="{% url "logout" %}">{% trans "Sign Out" %}</a>
-                            {% else %}
-                                <a class="user_login_link" href="{% url "login" %}">{% trans "Sign In" %}</a>
-                            {% endif %}
-                        </div>
+					    {% if user.is_authenticated %}
+						<a class="user_login_link" href="{% url "logout" %}">{% trans "Sign Out" %}</a>
+					    {% else %}
+						<a class="user_login_link" href="{% url "login" %}">{% trans "Sign In" %}</a>
+					    {% endif %}
+					</div>
 
-                        <span class="personal_bar_heading">
-                            {% if not user.is_authenticated %}
-                                {% comment %}
-                                <a href="{% url "registration_register" %}">{% trans "join now" %}</a>
-                                {% endcomment %}
-                            {% endif %}
-                        </span>
-                    {% endblock personal_tools %}
-				</div><!-- class="personal_tools" -->
+					<span class="personal_bar_heading">
+					    {% if not user.is_authenticated %}
+						{% comment %}
+						<a href="{% url "registration_register" %}">{% trans "join now" %}</a>
+						{% endcomment %}
+					    {% endif %}
+					</span>
+					{% endblock user_login_links %}
+				</div><!-- class="user_login_links" -->
 			</nav>
             {% endblock user_access %}
 
@@ -99,34 +124,51 @@
             {% endblock search_box %}
 
 			{% block header_nav %}
-			<ul class="{% block header_nav_classes %}header_nav nav nav-pills{% endblock %}" role="navigation">
-				{% block header_nav_menu %}
-                    {% show_menu 0 0 0 0 "cmsbootstrap/menu/menu.html" %}
-                    {% block language_menu %}
-                    <li class="language_menu_item dropdown">
-                        <a class="dropdown-toggle" id="language_menu_label" data-toggle="dropdown">
-                            {% trans "Language" %}
-                            <span class="caret"></span>
-                        </a>
-                        <ul class="dropdown-menu language_menu nav-pills" role="menu" aria-labelledby="language_menu_label">
-                            {% load menu_tags %}
-                            {% language_chooser "cmsbootstrap/menu/language_chooser.html" %}
-                        </ul>
-                    </li>
-                    {% endblock language_menu %}
-				{% endblock header_nav_menu %}
-			</ul>
+			<nav class="{% block header_nav_classes %}cmsbootstrap_header navbar navbar-default{% endblock %}" role="navigation">
+				<div class="container-fluid">
+					<div class="navbar-header">
+						<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+							{% block header_nav_brand %}{% endblock %}
+							<span class="sr-only">Toggle navigation</span>
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+						</button>
+					</div><!-- navbar-header -->
+					
+					<!-- Collect the nav links, forms, and other content for toggling -->
+					<div class="collapse navbar-collapse" id="cmsbootstrap-navbar-collapse-1">
+						<ul class="{% block header_nav_ul_classes %}nav navbar-nav{% endblock %}">
+						{% block header_nav_menu %}
+							{% show_menu 0 0 0 0 "cmsbootstrap/menu/menu.html" %}
+							{% block language_menu %}
+							<li class="language_menu_item dropdown">
+								<a class="dropdown-toggle" id="language_menu_label" data-toggle="dropdown">
+									{% trans "Language" %}
+									<span class="caret"></span>
+								</a>
+								<ul class="dropdown-menu language_menu" role="menu" aria-labelledby="language_menu_label">
+									{% language_chooser "cmsbootstrap/menu/language_chooser.html" %}
+								</ul>
+							</li><!-- language_menu_item -->
+							{% endblock language_menu %}
+						{% endblock header_nav_menu %}
+						</ul>
+					</div><!-- navbar-collapse -->
+				</div><!-- container-fluid -->
+			</nav><!-- header_nav -->
 			{% endblock header_nav %}
+
 		</header>
-        {% endblock header %}
+		{% endblock header %}
 
 		{% block main %}
 		<main class="{% block main_classes %}container-fluid{% endblock %}" role="main">
 			<a id="maincontent"></a>
 
 			{% block breadcrumb_wrap %}
-			<div class="{% block breadcrumb_wrap_classes %}breadcrumb_wrap row{% endblock %}">
-				<ul class="{% block breadcrumb_classes %}breadcrumb col-sm-12{% endblock %}">
+			<div class="{% block breadcrumb_wrap_classes %}breadcrumb_wrap{% endblock %}">
+				<ul class="{% block breadcrumb_classes %}breadcrumb{% endblock %}">
 				{% if custom_breadcrumb %}
 					{% for breadcrumb in custom_breadcrumb %}
 					<li>{% if not forloop.last %}<a href="{{ breadcrumb.url }}">{% endif %}{{ breadcrumb.title }}{% if not forloop.last %}</a><span class="divider">/</span>{% endif %}</li>
@@ -147,18 +189,20 @@
 		{% endblock main %}
 
 		{% block footer %}
-		<footer class="{% block footer_classes %}container-fluid{% endblock %}" role="contentinfo">
-			<nav class="{% block footer_nav_classes %}navbar navbar-default{% endblock %}" role="navigation">
-				<div class="footer_left navbar-left navbar-text">
-					{% show_placeholder "footer_left" "placeholders_extra" %}
-				</div>
-				<div class="footer_right navbar-right navbar-text">
-					{% show_placeholder "footer_right" "placeholders_extra" %}
-					{% block credits %}
-					{% trans "Site by" %} <a href="http://www.aptivate.org">Aptivate</a>
-					{% endblock %}
-				</div>
-			</nav>
+		<footer class="{% block footer_classes %}cmsbootstrap_footer container-fluid{% endblock %}" role="contentinfo">
+			<div class="footer_nav_wrapper">
+                <nav class="{% block footer_nav_classes %}footer_nav navbar navbar-default{% endblock %}" role="navigation">
+                    <div class="footer_left navbar-left navbar-text">
+                        {% show_placeholder "footer_left" "placeholders_extra" %}
+                    </div>
+                    <div class="footer_right navbar-right navbar-text">
+                        {% show_placeholder "footer_right" "placeholders_extra" %}
+                        {% block credits %}
+                        {% trans "Site by" %} <a href="http://www.aptivate.org">Aptivate</a>
+                        {% endblock %}
+                    </div>
+                </nav>
+			</div><!-- footer_nav_wrapper -->
 		</footer>
 		{% endblock footer %}
 

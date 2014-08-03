@@ -1,21 +1,52 @@
-.dropdown:hover > .dropdown-menu {
-	display: inherit;
+body {
+    padding: 1em 0;
 }
 
-.page_intro {
+.dropdown:hover > .dropdown-menu {
+    display: inherit;
+}
+
+header {
+    position: relative;
+}
+
+header > nav > div {
+    @extend .col-sm-12
+}
+
+.logo {
+    margin-bottom: 1em;
+}
+
+.user_access {
+    position: absolute;
+    top: 0;
+    right: 15px;
+}
+
+.user_access .user_login_link {
+    display: block;
+    text-align: right;
+}
+
+.page_intro > div {
     border: 5px solid #ddd;
     padding: 1em;
 }
 
-.page_features {
+.page_features > div {
     border: 5px solid #eee;
     border-radius: 10px;
     padding: 1em;
 }
 
-.latest > section {
+.latest > section > div {
     background: #eee;
     padding: 1em;
+}
+
+footer {
+    margin-top: 1em;
 }
 
 .footer_right .plugin_link:after {

@@ -6,8 +6,9 @@
 {% block template_name_class %}page_3_columns_notitle{% endblock %}
 
 {% block article %}
+<div class="article row">
 	{% block sidebar_left %}
-    <nav class="sidebar_left">
+    <nav class="{% block sidebar_left_classes %}sidebar_left col-md-3{% endblock %}">
 		{% with root=request.current_page.get_root %}
 		<ul class="nav nav-tabs nav-stacked">
 			{% show_menu_below_id root.reverse_id 0 100 100 100 %}
@@ -17,7 +18,7 @@
     {% endblock sidebar_left %}
 
 	{% block content_body %}
-    <article class="content_body">
+    <article class="{% block content_body_classes %}content_body col-md-6{% endblock %}">
         {% block messages %}
             <!--Django messages-->
             {% if messages %}
@@ -40,7 +41,7 @@
 	{% endblock content_body %}
 
     {% block sidebar_right %}
-    <div class="sidebar_right">
+    <div class="{% block sidebar_right_classes %}sidebar_right col-md-3{% endblock %}">
         <div class="sidebar_right_inner">
             {% block sidebar_right_content %}
                 {% placeholder "default_sidebar" or %}
@@ -50,4 +51,5 @@
         </div><!-- class="sidebar_right_inner" -->
     </div><!-- class="sidebar_right" -->
     {% endblock sidebar_right %}
+</div><!-- article row -->
 {% endblock article %}

@@ -1,5 +1,7 @@
 from __future__ import absolute_import, unicode_literals
 
+import re
+
 from django.core.management import call_command
 from django.template import Context, Template
 from django.test import TestCase
@@ -18,6 +20,10 @@ class SimpleTest(FastDispatchMixin, HtmlParsingMixin, TestCase):
             template="custom/homepage.html", language="en", slug="home",
             reverse_id="home",
             published=True)
+        title = self.home.title_set.all()[0]
+        title.page_title = "Home Page (whee)"
+        title.save()
+        self.publish_page(self.home)
         self.fake_request = self.get_fake_request('/fake_request')
 
     def test_get_homepage(self):
@@ -32,11 +38,11 @@ class SimpleTest(FastDispatchMixin, HtmlParsingMixin, TestCase):
     def test_homepage_structure(self):
         response = self.client.get('/en/')
         body = self.query(response, 'body')
-        self.assertEquals('slug_home page en template_homepage', body.get('class'),
+        self.assertEquals('slug_home lang_en template_homepage', body.get('class'),
             "Wrong CSS classes on body element")
 
         header = self.query(body, 'header')
-        self.assertEqual('header_site container-fluid', header.get('class'))
+        self.assertEqual('cmsbootstrap_header container-fluid', header.get('class'))
         # http://html5doctor.com/the-main-element/
         self.assertEqual('banner', header.get('role'))
         user_access = self.query(header, 'nav.user_access')
@@ -82,7 +88,7 @@ class SimpleTest(FastDispatchMixin, HtmlParsingMixin, TestCase):
         context.setdefault('request', self.fake_request)
         html = template.render(SekizaiContext(context))
         element = self.query(html, path_to_expect_content)
-        
+
         if attribute_if_not_text is None:
             values = [element.text]
             values.extend([e.tail for e in element])
@@ -92,9 +98,9 @@ class SimpleTest(FastDispatchMixin, HtmlParsingMixin, TestCase):
             if value is None: value = ''
 
         self.assertIn(override_block_with, value,
-            "Did not find expected text in correct location when overriding "
+            "Did not find expected text in correct location (%s) when overriding "
             "block '%s' on template '%s'. The complete output was: %s" %
-            (block_to_override, template_name, html))
+            (path_to_expect_content, block_to_override, template_name, html))
 
         if element_not_to_find is not None:
             unexpected_matches = self.query(html,
@@ -106,14 +112,36 @@ class SimpleTest(FastDispatchMixin, HtmlParsingMixin, TestCase):
                 "An element that should have been replaced was found in the "
                 "rendered page: %s" % element_not_to_find)
 
+        return html
+
+    def test_page_title(self):
+        response = self.client.get('/en/')
+
+        title = self.query(response, 'html > head > title').text
+        title = re.sub(r'\s+', ' ', title.strip())
+
+        self.assertEqual('CMSBootstrap - Home Page (whee)', title)
+
     def assert_override_template_blocks(self, template, skip=[]):
         self.assert_override_block(template, 'title', 'html > head > title', skip=skip)
+
+        """
+        def extract_title(block_to_override):
+            title = self.assert_override_block(template, block_to_override,
+                'html > head > title', override_block_with='foobar')
+            title = self.query(title, 'html > head > title').text
+            title = re.sub(r'\s+', ' ', title.strip())
+            return title
+        self.assertEquals('foobar - Home Page (whee)', extract_title('site_name'))
+        self.assertEquals('CMSBootstrap - foobar', extract_title('page_title'))
+        """
+
         self.assert_override_block(template, 'viewport', 'html > head',
             element_not_to_find='> meta[name=viewport]', skip=skip)
-        self.assert_override_block(template, 'css', 'html > head',
+        self.assert_override_block(template, 'media', 'html > head',
             element_not_to_find='> link[rel=stylesheet]', skip=skip)
-        self.assert_override_block(template, 'standard_css', 'html > head', skip=skip)
-        self.assert_override_block(template, 'js_header', 'html > head', skip=skip)
+        self.assert_override_block(template, 'standard_css', 'html > head',
+            element_not_to_find='> link[rel=stylesheet]', skip=skip)
 
         self.assert_override_block(template, 'body_classes', 'html > body',
             attribute_if_not_text='class', skip=skip)
@@ -122,18 +150,19 @@ class SimpleTest(FastDispatchMixin, HtmlParsingMixin, TestCase):
         self.assert_override_block(template, 'logo', 'html > body > header', skip=skip)
         self.assert_override_block(template, 'user_access', 'html > body > header',
             element_not_to_find='nav.user_access', skip=skip)
-        self.assert_override_block(template, 'personal_tools',
-            'html > body > header > nav.user_access > div.personal_tools',
+        self.assert_override_block(template, 'user_login_links',
+            'html > body > header > nav.user_access > div.user_login_links',
             element_not_to_find='div.user_login', skip=skip)
         self.assert_override_block(template, 'search_box',
             'html > body > header', skip=skip)
         self.assert_override_block(template, 'header_nav',
-            'html > body > header', element_not_to_find='ul.header_nav', skip=skip)
+            'html > body > header', element_not_to_find='nav.cmsbootstrap_header',
+            skip=skip)
         self.assert_override_block(template, 'header_nav_menu',
-            'html > body > header > .header_nav',
+            'nav.cmsbootstrap_header .navbar-collapse > ul',
             element_not_to_find='li.language_menu', skip=skip)
         self.assert_override_block(template, 'language_menu',
-            'html > body > header > .header_nav',
+            'nav.cmsbootstrap_header .navbar-collapse > ul',
             element_not_to_find='li.language_menu_item', skip=skip)
 
         self.assert_override_block(template, 'main', 'html > body',
@@ -158,9 +187,9 @@ class SimpleTest(FastDispatchMixin, HtmlParsingMixin, TestCase):
         self.assert_override_block(template, 'footer_classes', 'html > body > footer',
             attribute_if_not_text='class', skip=skip)
         self.assert_override_block(template, 'footer_nav_classes',
-            'html > body > footer > nav', attribute_if_not_text='class', skip=skip)
+            'html > body > footer nav', attribute_if_not_text='class', skip=skip)
         self.assert_override_block(template, 'credits',
-            'html > body > footer > nav > .footer_right',
+            'html > body > footer nav > .footer_right',
             element_not_to_find='a', skip=skip)
         self.assert_override_block(template, 'js_footer',
             'html > body', element_not_to_find='script', skip=skip)
@@ -179,26 +208,31 @@ class SimpleTest(FastDispatchMixin, HtmlParsingMixin, TestCase):
             self.query(main, 'div.sidebar_right')
 
         self.assert_override_block(self.home.template, 'sidebar_left',
-            'html > body > main', element_not_to_find='nav.sidebar_left', skip=skip)
+            'html > body > main > .article.row',
+            element_not_to_find='nav.sidebar_left', skip=skip)
 
         self.assert_override_block(self.home.template, 'content_body',
-            'html > body > main', element_not_to_find='article', skip=skip)
+            'html > body > main > .article.row',
+            element_not_to_find='article', skip=skip)
 
         self.assert_override_block(self.home.template, 'messages',
-            'html > body > main > article', context={'messages': ["Whee!"]},
+            'html > body > main > .article.row > article',
+            context={'messages': ["Whee!"]},
             element_not_to_find='div.alert', skip=skip)
 
         self.assert_override_block(self.home.template, 'main_section_title',
-            'html > body > main > article', skip=skip)
+            'html > body > main > .article.row > article', skip=skip)
 
         self.assert_override_block(self.home.template, 'main_content',
-            'html > body > main > article', skip=skip)
+            'html > body > main > .article.row > article', skip=skip)
 
         self.assert_override_block(self.home.template, 'sidebar_right',
-            'html > body > main', element_not_to_find='nav.sidebar_right', skip=skip)
+            'html > body > main > .article.row',
+            element_not_to_find='nav.sidebar_right', skip=skip)
 
         self.assert_override_block(self.home.template, 'sidebar_right_content',
-            'html > body > main > .sidebar_right > .sidebar_right_inner', skip=skip)
+            'html > body > main > .article.row > .sidebar_right > .sidebar_right_inner',
+            skip=skip)
 
     def publish_page(self, page):
         try:
@@ -214,7 +248,7 @@ class SimpleTest(FastDispatchMixin, HtmlParsingMixin, TestCase):
         self.assertEquals(self.home.template, response.templates[0].name)
 
         body = self.query(response, 'body')
-        self.assertEquals('slug_home page en template_page_3_columns_notitle',
+        self.assertEquals('slug_home lang_en template_page_3_columns_notitle',
             body.get('class'), "Wrong CSS classes on body element")
 
         self.assert_page_3col_structure(response)
@@ -227,12 +261,12 @@ class SimpleTest(FastDispatchMixin, HtmlParsingMixin, TestCase):
         self.assertEquals(self.home.template, response.templates[0].name)
 
         body = self.query(response, 'body')
-        self.assertEquals('slug_home page en template_page_3_columns',
+        self.assertEquals('slug_home lang_en template_page_3_columns',
             body.get('class'), "Wrong CSS classes on body element")
 
         self.assert_page_3col_structure(response)
         self.assert_override_block(self.home.template, 'main_section_title',
-            'html > body > main > article', element_not_to_find='h1')
+            'html > body > main > .article.row > article', element_not_to_find='h1')
 
     def test_page_1col_structure(self):
         self.home.template = 'custom/page_1col.html'
@@ -242,13 +276,13 @@ class SimpleTest(FastDispatchMixin, HtmlParsingMixin, TestCase):
         self.assertEquals(self.home.template, response.templates[0].name)
 
         body = self.query(response, 'body')
-        self.assertEquals('slug_home page en template_page_1_column',
+        self.assertEquals('slug_home lang_en template_page_1_column',
             body.get('class'), "Wrong CSS classes on body element")
 
         self.assert_page_3col_structure(response,
             skip=['sidebar_left', 'sidebar_right', 'sidebar_right_content'])
         self.assert_override_block(self.home.template, 'main_section_title',
-            'html > body > main > article', element_not_to_find='h1')
+            'html > body > main > .article.row > article', element_not_to_find='h1')
 
         self.assertEquals([], [self.tostring(e)
             for e in self.query(body, 'main > nav.sidebar_left', list=True,
@@ -265,7 +299,7 @@ class SimpleTest(FastDispatchMixin, HtmlParsingMixin, TestCase):
         self.assertEquals(self.home.template, response.templates[0].name)
 
         body = self.query(response, 'body')
-        self.assertEquals('slug_home page en template_homepage',
+        self.assertEquals('slug_home lang_en template_homepage',
             body.get('class'), "Wrong CSS classes on body element")
 
         self.query(body, 'main > div.content_body')
