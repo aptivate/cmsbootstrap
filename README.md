@@ -345,28 +345,28 @@ a basic website out of Bootstrap:
 Elements that you're likely to remove or replace completely are wrapped in
 template blocks with the same name as the element or its CSS class:
 
-* `viewport`: <meta name="viewport">
+* `viewport`: `<meta name="viewport">`
 * `media`: all CSS and Javascript. You can override this to add CSS and
   early-loading JavaScript if you don't want to use assets.
-* `header`: <header class="{% block header_classes %}header_site container-fluid{% endblock %}">
+* `header`: `<header class="{% block header_classes %}header_site container-fluid{% endblock %}">`
 * `logo`: the default/dummy CMSBootstrap logo.
-* `user_access`: <nav class="user_access">
-* `user_login_links`: <div class="user_login_links">
-* `header_nav: HTML5 <nav> element:
-  <nav class="{% block header_nav_classes %}cmsbootstrap_header navbar navbar-default{% endblock %}">,
+* `user_access`: `<nav class="user_access">`
+* `user_login_links`: `<div class="user_login_links">`
+* `header_nav: HTML5 `<nav>` element:
+  `<nav class="{% block header_nav_classes %}cmsbootstrap_header navbar navbar-default{% endblock %}">`,
   a Bootstrap navbar for top navigation.
 * `header_nav_brand`: empty by default, you can override this to include your branding inside the header navbar
   instead of above it.
 * `header_nav_menu`: the Django-CMS top-level menu: {% show_menu 0 0 0 0 "cmsbootstrap/menu/menu.html" %}
 * `language_menu`: the Django-CMS language chooser
-* `main`: HTML5 <main> element: <main class="{% block main_classes %}container-fluid{% endblock %}">
+* `main`: HTML5 `<main>` element: `<main class="{% block main_classes %}container-fluid{% endblock %}">`
 * `breadcrumb_wrap`: the wrapper for the Django-CMS breadcrumbs element
-* `article`: HTML5 <article> element: <article class="main_article">. You can
-  override this to add left and right sidebars inside <main>, as the
+* `article`: HTML5 `<article>` element: `<article class="main_article">`. You can
+  override this to add left and right sidebars inside `<main>`, as the
   page_3col_notitle.html template does.
 * `content`: empty by default, you can override this to hold your pages' main
   content, placeholder or application.
-* `footer`: <footer class="{% block footer_classes %}cmsbootstrap_footer container-fluid{% endblock %}">
+* `footer`: `<footer class="{% block footer_classes %}cmsbootstrap_footer container-fluid{% endblock %}">`
 * `js_footer`: loads most JavaScript assets. You can override this to add
   late-loading JavaScript in pages if you don't want to use assets.
 
