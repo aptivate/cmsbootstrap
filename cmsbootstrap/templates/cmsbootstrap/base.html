@@ -128,12 +128,12 @@
 				<div class="container-fluid">
 					<div class="navbar-header">
 						<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-							{% block header_nav_brand %}{% endblock %}
 							<span class="sr-only">Toggle navigation</span>
 							<span class="icon-bar"></span>
 							<span class="icon-bar"></span>
 							<span class="icon-bar"></span>
 						</button>
+						{% block header_nav_brand %}<a class="navbar-brand" href="#">Brand</a>{% endblock %}
 					</div><!-- navbar-header -->
 					
 					<!-- Collect the nav links, forms, and other content for toggling -->
