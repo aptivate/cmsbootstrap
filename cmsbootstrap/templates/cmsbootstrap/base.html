@@ -167,17 +167,7 @@
 			<a id="maincontent"></a>
 
 			{% block breadcrumb_wrap %}
-			<div class="{% block breadcrumb_wrap_classes %}breadcrumb_wrap{% endblock %}">
-				<ul class="{% block breadcrumb_classes %}breadcrumb{% endblock %}">
-				{% if custom_breadcrumb %}
-					{% for breadcrumb in custom_breadcrumb %}
-					<li>{% if not forloop.last %}<a href="{{ breadcrumb.url }}">{% endif %}{{ breadcrumb.title }}{% if not forloop.last %}</a><span class="divider">/</span>{% endif %}</li>
-					{% endfor %}
-				{% else %}
-					{% show_breadcrumb 0 "cmsbootstrap/menu/breadcrumb.html" %}
-				{% endif %}
-				</ul>
-			</div><!-- .breadcrumb_wrap -->
+                {% include "cmsbootstrap/breadcrumb_bar.html" %}
 			{% endblock breadcrumb_wrap %}
 
             {% block article %}

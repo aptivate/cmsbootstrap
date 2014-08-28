@@ -1,0 +1,16 @@
+{% load menu_tags %}
+
+<div class="{% block breadcrumb_wrap_classes %}breadcrumb_wrap{% endblock %}">
+    <ul class="{% block breadcrumb_classes %}breadcrumb{% endblock %}">
+    {% if custom_breadcrumb %}
+        {% for breadcrumb in custom_breadcrumb %}
+        <li>{% if not forloop.last %}<a href="{{ breadcrumb.url }}">{% endif %}{{ breadcrumb.title }}{% if not forloop.last %}</a><span class="divider">/</span>{% endif %}</li>
+        {% endfor %}
+    {% elif single_breadcrumb %}
+        {% include "cmsbootstrap/menu/breadcrumb.html" with active=False nochevron=True url="/" title="Home" %}
+        {% include "cmsbootstrap/menu/breadcrumb.html" with active=True nochevron=False title=single_breadcrumb %}
+    {% else %}
+        {% show_breadcrumb 0 "cmsbootstrap/menu/breadcrumbs.html" %}
+    {% endif %}
+    </ul>
+</div><!-- .breadcrumb_wrap -->
