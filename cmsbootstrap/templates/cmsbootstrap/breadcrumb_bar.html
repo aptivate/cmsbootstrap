@@ -7,7 +7,7 @@
         <li>{% if not forloop.last %}<a href="{{ breadcrumb.url }}">{% endif %}{{ breadcrumb.title }}{% if not forloop.last %}</a><span class="divider">/</span>{% endif %}</li>
         {% endfor %}
     {% elif single_breadcrumb %}
-        {% include "cmsbootstrap/menu/breadcrumb.html" with active=False nochevron=True url="/" title="Home" %}
+        {% show_breadcrumb 0 "cmsbootstrap/menu/breadcrumbs_no_active.html" %}
         {% include "cmsbootstrap/menu/breadcrumb.html" with active=True nochevron=False title=single_breadcrumb %}
     {% else %}
         {% show_breadcrumb 0 "cmsbootstrap/menu/breadcrumbs.html" %}
