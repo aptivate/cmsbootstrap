@@ -225,10 +225,10 @@
 				{% endif %}
 			{% endcomment %}
 
-			{% comment %}
+            {% if DJANGO_SETTINGS.ANALYTICS_ACCOUNT_NUMBER %}
 			<script type="text/javascript"><!--
 			var _gaq = _gaq || [];
-			_gaq.push(['_setAccount', '{{ ANALYTICS_ACCOUNT_NUMBER }}']);
+			_gaq.push(['_setAccount', '{{ DJANGO_SETTINGS.ANALYTICS_ACCOUNT_NUMBER }}']);
 			_gaq.push(['_trackPageview']);
 
 			(function() {
@@ -244,7 +244,7 @@
 				});
 			}
 			//--></script>
-			{% endcomment %}
+			{% endif %}
 		{% endblock js_footer %}
 	</body>
 </html>
