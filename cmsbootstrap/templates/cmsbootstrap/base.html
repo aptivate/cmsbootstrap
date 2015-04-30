@@ -6,12 +6,18 @@
 
 <!DOCTYPE html>
 <!-- http://www.impressivewebs.com/conditional-comments/ -->
-<!--[if lt IE 7]><html class="ie ie6" lang="{{ LANGUAGE_CODE|default:"en" }}"><![endif]-->
-<!--[if IE 7]><html class="ie ie7" lang="{{ LANGUAGE_CODE|default:"en" }}"><![endif]-->
-<!--[if IE 8]><html class="ie ie8" lang="{{ LANGUAGE_CODE|default:"en" }}"><![endif]-->
-<!--[if IE 9]><html class="ie ie9" lang="{{ LANGUAGE_CODE|default:"en" }}"><![endif]-->
-<!--[if !IE]><!--><html class="non-ie" lang="{{ LANGUAGE_CODE|default:"en" }}"><!--<![endif]-->
+<!--[if lt IE 7]><html class="ie ie6 no-js" lang="{{ LANGUAGE_CODE|default:"en" }}"><![endif]-->
+<!--[if IE 7]><html class="ie ie7 no-js" lang="{{ LANGUAGE_CODE|default:"en" }}"><![endif]-->
+<!--[if IE 8]><html class="ie ie8 no-js" lang="{{ LANGUAGE_CODE|default:"en" }}"><![endif]-->
+<!--[if IE 9]><html class="ie ie9 no-js" lang="{{ LANGUAGE_CODE|default:"en" }}"><![endif]-->
+<!--[if !IE]><!--><html class="non-ie no-js" lang="{{ LANGUAGE_CODE|default:"en" }}"><!--<![endif]-->
 	<head>
+        {# http://peterwilson.cc/avoiding-fouc/ #}
+        <script type="text/javascript">
+        (function(H){
+            H.className=H.className.replace(/\bno-js\b/,'')+' js';
+        })(document.documentElement);
+        </script>
 		{% block html-title %}
 			<title>CMSBootstrap - {% block title %}{% page_attribute "page_title" %}{% endblock %}</title>
 		{% endblock html-title %}
