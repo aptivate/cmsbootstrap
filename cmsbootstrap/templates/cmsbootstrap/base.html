@@ -61,6 +61,7 @@
 	<body class="{{ request.current_page.get_root.get_slug }} page {{ LANGUAGE_CODE }} {% block extra_class %}{% endblock %}">
 		{% cms_toolbar %}
 
+        {% block header %}
 		<header class="header_site">
 			{% block logo %}{% endblock %}
 
@@ -127,6 +128,7 @@
 			</ul>
 			{% endblock %}
 		</header>
+        {% endblock %}
 
 		{% block content-wrapper %}
 		<section class="content-wrapper row">
