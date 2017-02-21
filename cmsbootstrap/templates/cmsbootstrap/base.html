@@ -172,12 +172,12 @@
 		</footer>
 		{% endblock footer %}
 
-		{% render_block "js" %}
-
 		{% block js_footer %}
 			{% assets "cmsbootstrap.common_js" %}
 				<script type="text/javascript" src="{{ ASSET_URL }}"></script>
 			{% endassets %}
+
+            {% render_block "js" %} {# Render sekizai js block after common_js #}
 
 			{% comment %}
 			<script type="text/javascript"><!--
