@@ -177,8 +177,6 @@
 				<script type="text/javascript" src="{{ ASSET_URL }}"></script>
 			{% endassets %}
 
-            {% render_block "js" %} {# Render sekizai js block after common_js #}
-
 			{% comment %}
 			<script type="text/javascript"><!--
 			if(typeof $ == "undefined") {  // $ != jQuery
@@ -232,5 +230,7 @@
 			</script>
 			{% endcomment %}
 		{% endblock js_footer %}
+
+        {% render_block "js" %} {# Render sekizai js block after common_js #}
 	</body>
 </html>
