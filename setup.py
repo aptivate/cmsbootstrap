@@ -18,11 +18,9 @@ setup(
     #long_description=open('README.md').read(),
     setup_requires = [ "setuptools_git >= 0.3", ],
     install_requires=[
-        "Django >= 1.5, < 1.6",
-        "django-cms >= 2.4.3, < 3.0c1",
-        # "django-assets >= 0.8",
+        "Django >= 1.8, < 1.9",
+        "django-cms >= 3.0.0, < 3.2",
         "django-assets >= 0.8",
-        "south >= 0.8.4",
         "pyScss >= 1.2.0.post3",
         "cssmin >= 0.2.0",
     ],
